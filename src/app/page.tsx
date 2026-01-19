@@ -1,34 +1,11 @@
 import Image from "next/image";
 import { RotatingText } from "@/components/RotatingText";
+import { Header } from "@/components/Header";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-surface">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/">
-            <Image src="/logo.svg" alt="Pollio" width={120} height={40} priority />
-          </a>
-          <div className="flex items-center gap-6">
-            <a href="#pricing" className="text-text-secondary hover:text-text-primary transition-colors">
-              Pricing
-            </a>
-            <a
-              href="/login"
-              className="text-text-secondary hover:text-text-primary transition-colors"
-            >
-              Log in
-            </a>
-            <a
-              href="/signup"
-              className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
-            >
-              Get started free
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
