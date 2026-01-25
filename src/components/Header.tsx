@@ -57,7 +57,7 @@ export function Header() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[73px] bg-background z-40">
+        <div className="md:hidden fixed inset-0 top-[73px] bg-white z-40">
           <div className="flex flex-col p-6 space-y-6">
             <a
               href="#pricing"
