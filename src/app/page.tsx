@@ -236,7 +236,7 @@ export default function Home() {
               <h3 className="text-xl font-bold text-text-primary mb-2">Free</h3>
               <p className="text-text-secondary mb-4">Try it out, no commitment</p>
               <div className="text-3xl font-bold text-text-primary mb-6">
-                0 kr<span className="text-base font-normal text-text-secondary">/month</span>
+                0 kr
               </div>
               <ul className="space-y-3 mb-8">
                 <PricingFeature>1 presentation</PricingFeature>
@@ -247,33 +247,31 @@ export default function Home() {
                 href="/signup"
                 className="block text-center border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Get started free
+                Try it out free
               </a>
             </div>
 
             {/* Pro Plan */}
             <div className="bg-primary rounded-2xl p-6 md:p-8 text-white relative">
-              <div className="absolute top-4 right-4 bg-white/20 text-white text-xs px-2.5 py-1 rounded-full">
-                Popular
-              </div>
               <h3 className="text-xl font-bold mb-2">Pro</h3>
-              <p className="text-white/80 mb-4">For professionals and teams</p>
+              <p className="text-white/80 mb-4">For professionals with unlimited use</p>
               <div className="text-3xl font-bold mb-1">
-                49 kr<span className="text-base font-normal text-white/80">/month</span>
+                129 kr<span className="text-base font-normal text-white/80">/month</span>
               </div>
-              <p className="text-white/60 text-sm mb-6">or 429 kr/year (save 27%)</p>
+              <p className="text-white/60 text-sm mb-6">or 990 kr/year (save 36%)</p>
               <ul className="space-y-3 mb-8">
                 <PricingFeature light>Unlimited presentations</PricingFeature>
                 <PricingFeature light>Unlimited participants</PricingFeature>
+                <PricingFeature light>Session history & reports</PricingFeature>
                 <PricingFeature light>Export results to CSV</PricingFeature>
-                <PricingFeature light>Session history & analytics</PricingFeature>
               </ul>
               <a
                 href="/signup?plan=pro"
                 className="block text-center bg-white text-primary hover:bg-white/90 px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Start free trial
+                Go Pro
               </a>
+              <p className="text-white/60 text-xs text-center mt-3">Cancel anytime</p>
             </div>
           </div>
         </div>
@@ -292,7 +290,15 @@ export default function Home() {
             />
             <FAQItem
               question="How many people can join a session?"
-              answer="The free plan supports up to 10 participants. Pro plan has no limit — we've tested sessions with hundreds of people."
+              answer="The free plan supports up to 10 participants per session. Pro plan has no limit — we've tested sessions with hundreds of people."
+            />
+            <FAQItem
+              question="What counts as a presentation?"
+              answer="One Pollio deck/session you create and run. The free plan lets you create 1 presentation, Pro gives you unlimited."
+            />
+            <FAQItem
+              question="Can I upgrade later?"
+              answer="Yes. You can switch to Pro anytime from your account settings. Your existing presentations and data stay intact."
             />
             <FAQItem
               question="Are responses anonymous?"
