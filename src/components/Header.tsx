@@ -57,29 +57,21 @@ export function Header() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[73px] bg-white z-40">
-          <div className="flex flex-col p-6 space-y-6">
+        <div className="md:hidden absolute left-0 right-0 top-full bg-white border-b border-surface shadow-lg">
+          <div className="flex flex-col p-6 space-y-4">
             <a
               href="#pricing"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-medium text-text-primary hover:text-primary transition-colors"
+              className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"
             >
               Pricing
             </a>
-            <hr className="border-surface" />
             <a
               href="/login"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-medium text-text-primary hover:text-primary transition-colors"
+              className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"
             >
               Log in
-            </a>
-            <a
-              href="/signup"
-              onClick={() => setIsMenuOpen(false)}
-              className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium text-center transition-colors"
-            >
-              Get started free
             </a>
           </div>
         </div>
