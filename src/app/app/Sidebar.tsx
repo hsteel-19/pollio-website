@@ -56,7 +56,7 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
   }
 
   return (
-    <aside className="w-64 bg-background border-r border-text-secondary/10 min-h-screen p-4 hidden md:flex md:flex-col">
+    <aside className="w-64 bg-background border-r border-text-secondary/10 h-screen p-4 hidden md:flex md:flex-col sticky top-0">
       <Link href="/app" className="mb-8 block">
         <Image src="/logo.svg" alt="Pollio" width={100} height={34} priority />
       </Link>
