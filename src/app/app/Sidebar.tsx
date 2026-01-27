@@ -8,9 +8,10 @@ import Image from 'next/image'
 interface SidebarProps {
   userEmail: string
   userName: string | null
+  isPro: boolean
 }
 
-export function Sidebar({ userEmail, userName }: SidebarProps) {
+export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -23,6 +24,7 @@ export function Sidebar({ userEmail, userName }: SidebarProps) {
   const navItems = [
     { href: '/app', label: 'Home', exact: true },
     { href: '/app/presentations', label: 'My presentations', exact: false },
+    { href: '/app/settings', label: 'Settings', exact: false },
   ]
 
   const isActive = (href: string, exact: boolean) => {
@@ -54,8 +56,15 @@ export function Sidebar({ userEmail, userName }: SidebarProps) {
 
       <div className="border-t border-text-secondary/10 pt-4 mt-4">
         <div className="px-4 mb-3">
-          <div className="text-sm font-medium text-text-primary truncate">
-            {userName || 'User'}
+          <div className="flex items-center gap-2">
+            <div className="text-sm font-medium text-text-primary truncate">
+              {userName || 'User'}
+            </div>
+            {isPro && (
+              <span className="bg-primary/10 text-primary text-xs font-medium px-2 py-0.5 rounded-full">
+                Pro
+              </span>
+            )}
           </div>
           <div className="text-xs text-text-secondary truncate">
             {userEmail}

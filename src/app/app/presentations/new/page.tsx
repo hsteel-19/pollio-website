@@ -1,15 +1,57 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { UpgradeModal } from '@/components/UpgradeModal'
+import { getSubscriptionInfo, FREE_TIER_LIMITS } from '@/lib/subscription'
 
 export default function NewPresentationPage() {
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false)
+  const [checking, setChecking] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const router = useRouter()
+
+  // Check limits on page load
+  useEffect(() => {
+    const checkLimits = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        setChecking(false)
+        return
+      }
+
+      // Fetch subscription status
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('subscription_status, subscription_ends_at')
+        .eq('id', user.id)
+        .single()
+
+      const subscription = getSubscriptionInfo(profile)
+
+      if (!subscription.isPro) {
+        // Count existing presentations
+        const { count } = await supabase
+          .from('presentations')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+
+        if ((count || 0) >= FREE_TIER_LIMITS.maxPresentations) {
+          setShowUpgradeModal(true)
+        }
+      }
+
+      setChecking(false)
+    }
+
+    checkLimits()
+  }, [])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,6 +65,28 @@ export default function NewPresentationPage() {
       setError('You must be logged in')
       setLoading(false)
       return
+    }
+
+    // Re-check limits before creating
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_status, subscription_ends_at')
+      .eq('id', user.id)
+      .single()
+
+    const subscription = getSubscriptionInfo(profile)
+
+    if (!subscription.isPro) {
+      const { count } = await supabase
+        .from('presentations')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+
+      if ((count || 0) >= FREE_TIER_LIMITS.maxPresentations) {
+        setShowUpgradeModal(true)
+        setLoading(false)
+        return
+      }
     }
 
     const presentationTitle = title.trim() || 'Untitled Presentation'
@@ -55,6 +119,14 @@ export default function NewPresentationPage() {
       })
 
     router.push(`/app/presentations/${data.id}`)
+  }
+
+  if (checking) {
+    return (
+      <div className="max-w-lg mx-auto flex items-center justify-center min-h-[200px]">
+        <div className="text-text-secondary">Loading...</div>
+      </div>
+    )
   }
 
   return (
@@ -104,6 +176,14 @@ export default function NewPresentationPage() {
           </button>
         </div>
       </form>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => {
+          setShowUpgradeModal(false)
+          router.push('/app/presentations')
+        }}
+      />
     </div>
   )
 }
