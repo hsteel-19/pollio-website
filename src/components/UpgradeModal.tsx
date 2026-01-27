@@ -8,18 +8,19 @@ interface UpgradeModalProps {
 }
 
 export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
-  const [loading, setLoading] = useState<'monthly' | 'yearly' | null>(null)
+  const [selectedPlan, setSelectedPlan] = useState<'yearly' | 'monthly'>('yearly')
+  const [loading, setLoading] = useState(false)
 
   if (!isOpen) return null
 
-  const handleCheckout = async (priceType: 'monthly' | 'yearly') => {
-    setLoading(priceType)
+  const handleContinue = async () => {
+    setLoading(true)
 
     try {
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceType }),
+        body: JSON.stringify({ priceType: selectedPlan }),
       })
 
       const data = await response.json()
@@ -28,11 +29,11 @@ export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
         window.location.href = data.url
       } else {
         console.error('Failed to create checkout session')
-        setLoading(null)
+        setLoading(false)
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      setLoading(null)
+      setLoading(false)
     }
   }
 
@@ -70,50 +71,57 @@ export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
           </p>
         </div>
 
+        {/* Plan selection */}
         <div className="space-y-3 mb-6">
           <button
-            onClick={() => handleCheckout('yearly')}
-            disabled={loading !== null}
-            className="w-full bg-primary hover:bg-primary-dark disabled:bg-primary/50 text-white py-4 px-6 rounded-xl font-semibold transition-colors relative"
+            onClick={() => setSelectedPlan('yearly')}
+            className={`w-full py-4 px-5 rounded-xl text-left transition-all border-2 ${
+              selectedPlan === 'yearly'
+                ? 'border-primary bg-primary/5'
+                : 'border-text-secondary/20 hover:border-text-secondary/40'
+            }`}
           >
-            {loading === 'yearly' ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Processing...
-              </span>
-            ) : (
-              <>
-                <span className="block">990 kr/year</span>
-                <span className="block text-sm font-normal text-white/80">
-                  Save 36% compared to monthly
-                </span>
-              </>
-            )}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-semibold text-text-primary">990 kr/year</div>
+                <div className="text-sm text-text-secondary">Save 36% compared to monthly</div>
+              </div>
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                selectedPlan === 'yearly' ? 'border-primary' : 'border-text-secondary/40'
+              }`}>
+                {selectedPlan === 'yearly' && (
+                  <div className="w-3 h-3 rounded-full bg-primary" />
+                )}
+              </div>
+            </div>
           </button>
 
           <button
-            onClick={() => handleCheckout('monthly')}
-            disabled={loading !== null}
-            className="w-full bg-surface hover:bg-gray-100 disabled:bg-surface/50 text-text-primary py-4 px-6 rounded-xl font-semibold transition-colors border border-text-secondary/20"
+            onClick={() => setSelectedPlan('monthly')}
+            className={`w-full py-4 px-5 rounded-xl text-left transition-all border-2 ${
+              selectedPlan === 'monthly'
+                ? 'border-primary bg-primary/5'
+                : 'border-text-secondary/20 hover:border-text-secondary/40'
+            }`}
           >
-            {loading === 'monthly' ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Processing...
-              </span>
-            ) : (
-              <span>129 kr/month</span>
-            )}
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-semibold text-text-primary">129 kr/month</div>
+                <div className="text-sm text-text-secondary">Flexible monthly billing</div>
+              </div>
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                selectedPlan === 'monthly' ? 'border-primary' : 'border-text-secondary/40'
+              }`}>
+                {selectedPlan === 'monthly' && (
+                  <div className="w-3 h-3 rounded-full bg-primary" />
+                )}
+              </div>
+            </div>
           </button>
         </div>
 
-        <ul className="space-y-2 text-sm text-text-secondary">
+        {/* Features */}
+        <ul className="space-y-2 text-sm text-text-secondary mb-6">
           <li className="flex items-center">
             <svg className="w-4 h-4 mr-2 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -139,6 +147,25 @@ export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
             Cancel anytime
           </li>
         </ul>
+
+        {/* CTA Button */}
+        <button
+          onClick={handleContinue}
+          disabled={loading}
+          className="w-full bg-primary hover:bg-primary-dark disabled:bg-primary/50 text-white py-4 px-6 rounded-xl font-semibold transition-colors"
+        >
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Processing...
+            </span>
+          ) : (
+            'Continue'
+          )}
+        </button>
       </div>
     </div>
   )
