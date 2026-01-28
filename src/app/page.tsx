@@ -200,7 +200,7 @@ export default function Home() {
                 Meetings became clearer, more open, and honestly more fun — and the input made decisions better.
               </p>
               <p className="text-text-primary font-medium">
-                That&apos;s the mission behind Pollio: help teams and hosts turn presentations into conversations,
+                That&apos;s the mission behind Pollio: help presenters turn presentations into conversations,
                 so more voices are heard and every meeting creates real momentum.
               </p>
             </div>
@@ -439,9 +439,21 @@ function PricingFeature({ children, light }: { children: React.ReactNode; light?
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   return (
-    <div className="bg-background rounded-xl p-6 border border-text-secondary/10">
-      <h3 className="font-semibold text-text-primary mb-2">{question}</h3>
-      <p className="text-text-secondary">{answer}</p>
-    </div>
+    <details className="group bg-background rounded-xl border border-text-secondary/10 overflow-hidden">
+      <summary className="flex items-center justify-between p-6 cursor-pointer list-none font-semibold text-text-primary hover:bg-surface/50 transition-colors">
+        {question}
+        <svg
+          className="w-5 h-5 text-text-secondary flex-shrink-0 ml-4 transition-transform group-open:rotate-180"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+      <div className="px-6 pb-6 pt-0 text-text-secondary">
+        {answer}
+      </div>
+    </details>
   );
 }
