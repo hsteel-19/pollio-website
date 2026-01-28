@@ -21,24 +21,6 @@ export default function ContactPage() {
           </p>
 
           <ContactForm />
-
-          <div className="mt-12 pt-8 border-t border-text-secondary/10 text-center">
-            <p className="text-text-secondary mb-4">
-              You can also reach us directly at:
-            </p>
-            <a
-              href="mailto:henrik.staahle@gmail.com"
-              className="text-primary hover:underline font-medium"
-            >
-              henrik.staahle@gmail.com
-            </a>
-
-            <div className="mt-8 text-sm text-text-secondary">
-              <p>Studio FRIHÄVA AB</p>
-              <p>Grev Turegatan 54</p>
-              <p>114 38 Stockholm, Sweden</p>
-            </div>
-          </div>
         </div>
       </main>
     </div>

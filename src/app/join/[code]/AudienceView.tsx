@@ -103,8 +103,36 @@ export function AudienceView({ session, initialSlide }: Props) {
       )
       .subscribe()
 
+    // Polling fallback for session status (in case realtime doesn't work due to RLS)
+    const pollInterval = setInterval(async () => {
+      const { data } = await supabase
+        .from('sessions')
+        .select('status, active_slide_id')
+        .eq('id', session.id)
+        .single()
+
+      if (data) {
+        if (data.status === 'ended') {
+          setSessionStatus('ended')
+        } else if (data.active_slide_id && data.active_slide_id !== currentSlide?.id) {
+          // Fetch new slide if changed
+          const { data: newSlide } = await supabase
+            .from('slides')
+            .select('*')
+            .eq('id', data.active_slide_id)
+            .single()
+
+          if (newSlide) {
+            setCurrentSlide(newSlide)
+            setHasResponded(false)
+          }
+        }
+      }
+    }, 3000) // Poll every 3 seconds
+
     return () => {
       supabase.removeChannel(channel)
+      clearInterval(pollInterval)
     }
   }, [session.id, currentSlide?.id])
 

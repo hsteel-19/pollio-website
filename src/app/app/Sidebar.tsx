@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
+import { UpgradeModal } from '@/components/UpgradeModal'
 
 interface SidebarProps {
   userEmail: string
@@ -15,31 +16,12 @@ interface SidebarProps {
 export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const [upgradeLoading, setUpgradeLoading] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/login')
-  }
-
-  const handleUpgrade = async () => {
-    setUpgradeLoading(true)
-    try {
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceType: 'yearly' }),
-      })
-      const data = await response.json()
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch (error) {
-      console.error('Checkout error:', error)
-    } finally {
-      setUpgradeLoading(false)
-    }
   }
 
   const navItems = [
@@ -75,24 +57,11 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
             {item.label}
           </Link>
         ))}
-      </nav>
 
-      <div className="border-t border-text-secondary/10 pt-4 mt-4">
-        {/* Upgrade button for free users */}
-        {!isPro && (
-          <button
-            onClick={handleUpgrade}
-            disabled={upgradeLoading}
-            className="w-full mb-3 bg-primary hover:bg-primary-dark disabled:bg-primary/50 text-white py-2.5 px-4 rounded-lg font-medium transition-colors text-sm"
-          >
-            {upgradeLoading ? 'Loading...' : 'Upgrade to Pro'}
-          </button>
-        )}
-
-        {/* Settings link */}
+        {/* Settings link - above the divider */}
         <Link
           href="/app/settings"
-          className={`block px-4 py-2.5 rounded-lg transition-colors mb-3 ${
+          className={`block px-4 py-2.5 rounded-lg transition-colors ${
             pathname === '/app/settings'
               ? 'bg-primary/10 text-primary font-medium'
               : 'text-text-secondary hover:bg-surface hover:text-text-primary'
@@ -100,6 +69,18 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
         >
           Settings
         </Link>
+      </nav>
+
+      <div className="border-t border-text-secondary/10 pt-4 mt-4">
+        {/* Upgrade button for free users */}
+        {!isPro && (
+          <button
+            onClick={() => setShowUpgradeModal(true)}
+            className="w-full mb-3 bg-primary hover:bg-primary-dark text-white py-2.5 px-4 rounded-lg font-medium transition-colors text-sm"
+          >
+            Upgrade to Pro
+          </button>
+        )}
 
         <div className="px-4 mb-3">
           <div className="flex items-center gap-2">
@@ -127,6 +108,11 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
           Log out
         </button>
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+      />
     </aside>
   )
 }
