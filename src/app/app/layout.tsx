@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { getUserWithProfile } from '@/lib/supabase/server'
 import { Sidebar } from './Sidebar'
 import { getSubscriptionInfo } from '@/lib/subscription'
 
@@ -7,16 +7,7 @@ export default async function PlatformLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Fetch profile for full name and subscription status
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, subscription_status, subscription_ends_at')
-    .eq('id', user?.id)
-    .single()
-
+  const { user, profile } = await getUserWithProfile()
   const subscription = getSubscriptionInfo(profile)
 
   return (

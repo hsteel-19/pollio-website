@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { cache } from 'react'
 
 export async function createClient() {
   const cookieStore = await cookies()
@@ -26,3 +27,26 @@ export async function createClient() {
     }
   )
 }
+
+// Cached version of getUser - deduplicates calls within a single request
+export const getUser = cache(async () => {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+})
+
+// Cached version of getUser with profile - for pages that need both
+export const getUserWithProfile = cache(async () => {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { user: null, profile: null }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, subscription_status, subscription_ends_at')
+    .eq('id', user.id)
+    .single()
+
+  return { user, profile }
+})
