@@ -5,11 +5,45 @@ export default async function PresentationsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Fetch presentations with their sessions
   const { data: presentations } = await supabase
     .from('presentations')
-    .select('*')
+    .select(`
+      *,
+      sessions (
+        id,
+        status
+      )
+    `)
     .eq('user_id', user?.id)
     .order('updated_at', { ascending: false })
+
+  // Split presentations into drafts and completed
+  const drafts = presentations?.filter(p => {
+    const endedSessions = p.sessions?.filter((s: { status: string }) => s.status === 'ended') || []
+    return endedSessions.length === 0
+  }) || []
+
+  const completed = presentations?.filter(p => {
+    const endedSessions = p.sessions?.filter((s: { status: string }) => s.status === 'ended') || []
+    return endedSessions.length > 0
+  }) || []
+
+  const PresentationCard = ({ presentation }: { presentation: typeof presentations extends (infer T)[] | null ? T : never }) => (
+    <Link
+      href={`/app/presentations/${presentation.id}`}
+      className="bg-background border border-text-secondary/10 rounded-xl p-6 hover:border-primary/50 hover:shadow-lg transition-all group"
+    >
+      <h3 className="font-semibold text-text-primary group-hover:text-primary mb-2 truncate">
+        {presentation.title}
+      </h3>
+      <p className="text-sm text-text-secondary">
+        Updated {new Date(presentation.updated_at).toLocaleDateString()}
+      </p>
+    </Link>
+  )
+
+  const hasNoPresentations = !presentations || presentations.length === 0
 
   return (
     <div>
@@ -23,37 +57,7 @@ export default async function PresentationsPage() {
         </Link>
       </div>
 
-      {presentations && presentations.length > 0 ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {presentations.map((presentation) => (
-            <Link
-              key={presentation.id}
-              href={`/app/presentations/${presentation.id}`}
-              className="bg-background border border-text-secondary/10 rounded-xl p-6 hover:border-primary/50 hover:shadow-lg transition-all group"
-            >
-              <h3 className="font-semibold text-text-primary group-hover:text-primary mb-2 truncate">
-                {presentation.title}
-              </h3>
-              <p className="text-sm text-text-secondary">
-                Updated {new Date(presentation.updated_at).toLocaleDateString()}
-              </p>
-            </Link>
-          ))}
-
-          {/* New presentation card */}
-          <Link
-            href="/app/presentations/new"
-            className="border-2 border-dashed border-text-secondary/20 rounded-xl p-6 hover:border-primary hover:bg-primary/5 transition-colors group flex flex-col items-center justify-center min-h-[120px]"
-          >
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20">
-              <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-            </div>
-            <span className="text-sm text-text-secondary group-hover:text-primary">New presentation</span>
-          </Link>
-        </div>
-      ) : (
+      {hasNoPresentations ? (
         <div className="text-center py-16">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,6 +72,57 @@ export default async function PresentationsPage() {
           >
             Create presentation
           </Link>
+        </div>
+      ) : (
+        <div className="space-y-10">
+          {/* Drafts Section */}
+          <section>
+            <h2 className="text-lg font-semibold text-text-primary mb-4">Drafts</h2>
+            {drafts.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {drafts.map((presentation) => (
+                  <PresentationCard key={presentation.id} presentation={presentation} />
+                ))}
+                {/* New presentation card */}
+                <Link
+                  href="/app/presentations/new"
+                  className="border-2 border-dashed border-text-secondary/20 rounded-xl p-6 hover:border-primary hover:bg-primary/5 transition-colors group flex flex-col items-center justify-center min-h-[120px]"
+                >
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary/20">
+                    <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                  <span className="text-sm text-text-secondary group-hover:text-primary">New presentation</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="bg-surface rounded-xl p-8 text-center">
+                <p className="text-text-secondary mb-4">No drafts - all your presentations have been presented!</p>
+                <Link
+                  href="/app/presentations/new"
+                  className="inline-flex items-center text-primary hover:underline"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Create new presentation
+                </Link>
+              </div>
+            )}
+          </section>
+
+          {/* Completed Section */}
+          {completed.length > 0 && (
+            <section>
+              <h2 className="text-lg font-semibold text-text-primary mb-4">Completed</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {completed.map((presentation) => (
+                  <PresentationCard key={presentation.id} presentation={presentation} />
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </div>
