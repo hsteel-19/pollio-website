@@ -32,5 +32,6 @@ export function getSubscriptionInfo(profile: {
 // Free tier limits
 export const FREE_TIER_LIMITS = {
   maxPresentations: 1,
+  maxSessionsPerPresentation: 2,
   maxParticipantsPerSession: 10,
 }

@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { SlideEditor } from './SlideEditor'
 import { AddSlideModal } from './AddSlideModal'
+import { UpgradeModal } from '@/components/UpgradeModal'
+import { FREE_TIER_LIMITS } from '@/lib/subscription'
 
 type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
@@ -38,6 +40,10 @@ interface Props {
   presentation: Presentation
   initialSlides: Slide[]
   initialSessions?: Session[]
+  isLocked?: boolean
+  isPro?: boolean
+  completedSessionCount?: number
+  maxSessions?: number
 }
 
 const slideTypeLabels: Record<SlideType, string> = {
@@ -76,7 +82,15 @@ const slideTypeIcons: Record<SlideType, React.ReactNode> = {
   ),
 }
 
-export function PresentationEditor({ presentation, initialSlides, initialSessions = [] }: Props) {
+export function PresentationEditor({
+  presentation,
+  initialSlides,
+  initialSessions = [],
+  isLocked = false,
+  isPro = false,
+  completedSessionCount = 0,
+  maxSessions = 2,
+}: Props) {
   const [title, setTitle] = useState(presentation.title)
   const [slides, setSlides] = useState<Slide[]>(initialSlides)
   const [selectedSlideId, setSelectedSlideId] = useState<string | null>(
@@ -85,8 +99,10 @@ export function PresentationEditor({ presentation, initialSlides, initialSession
   const [showAddModal, setShowAddModal] = useState(false)
   const [saving, setSaving] = useState(false)
   const [startingSession, setStartingSession] = useState(false)
-  const [activeTab, setActiveTab] = useState<'create' | 'results'>('create')
+  const [activeTab, setActiveTab] = useState<'create' | 'results'>(isLocked ? 'results' : 'create')
   const [sessions, setSessions] = useState<Session[]>(initialSessions)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [duplicating, setDuplicating] = useState(false)
   const router = useRouter()
 
   // Fetch sessions with response counts
@@ -127,6 +143,12 @@ export function PresentationEditor({ presentation, initialSlides, initialSession
   const startSession = async () => {
     if (slides.length === 0) {
       alert('Add at least one slide before starting a session')
+      return
+    }
+
+    // Check if locked (free user at session limit)
+    if (isLocked) {
+      setShowUpgradeModal(true)
       return
     }
 
@@ -262,8 +284,99 @@ export function PresentationEditor({ presentation, initialSlides, initialSession
     }
   }
 
+  const duplicatePresentation = async () => {
+    setDuplicating(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      setDuplicating(false)
+      return
+    }
+
+    // Check presentation limit for free users
+    if (!isPro) {
+      const { count } = await supabase
+        .from('presentations')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+
+      if ((count || 0) >= FREE_TIER_LIMITS.maxPresentations) {
+        // At presentation limit, show upgrade modal
+        setDuplicating(false)
+        setShowUpgradeModal(true)
+        return
+      }
+    }
+
+    // Create new presentation
+    const { data: newPresentation, error: presentationError } = await supabase
+      .from('presentations')
+      .insert({
+        user_id: user.id,
+        title: `${title} (Copy)`,
+      })
+      .select()
+      .single()
+
+    if (presentationError || !newPresentation) {
+      alert('Failed to duplicate presentation')
+      setDuplicating(false)
+      return
+    }
+
+    // Copy all slides
+    const slidesToInsert = slides.map((slide) => ({
+      presentation_id: newPresentation.id,
+      type: slide.type,
+      title: slide.title,
+      description: slide.description,
+      position: slide.position,
+      settings: slide.settings,
+    }))
+
+    await supabase.from('slides').insert(slidesToInsert)
+
+    // Navigate to the new presentation
+    router.push(`/app/presentations/${newPresentation.id}`)
+  }
+
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col -m-8">
+      {/* Locked banner */}
+      {isLocked && (
+        <div className="bg-amber-50 border-b border-amber-200 px-6 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <div>
+                <span className="font-medium text-amber-800">This presentation is locked</span>
+                <span className="text-amber-700 ml-2">
+                  You&apos;ve used {completedSessionCount}/{maxSessions} sessions on the free plan.
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={duplicatePresentation}
+                disabled={duplicating}
+                className="text-sm text-amber-700 hover:text-amber-900 font-medium"
+              >
+                {duplicating ? 'Duplicating...' : 'Duplicate to edit'}
+              </button>
+              <button
+                onClick={() => setShowUpgradeModal(true)}
+                className="bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-colors"
+              >
+                Upgrade to Pro
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-background border-b border-text-secondary/10">
         <div className="px-6 py-4 flex items-center justify-between">
@@ -276,13 +389,17 @@ export function PresentationEditor({ presentation, initialSlides, initialSession
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={saveTitle}
-              className="text-xl font-semibold bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-2 py-1 -ml-2"
-            />
+            {isLocked ? (
+              <span className="text-xl font-semibold px-2 py-1 -ml-2">{title}</span>
+            ) : (
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={saveTitle}
+                className="text-xl font-semibold bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-2 py-1 -ml-2"
+              />
+            )}
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-text-secondary">
@@ -340,7 +457,8 @@ export function PresentationEditor({ presentation, initialSlides, initialSession
               <div className="p-4 border-b border-text-secondary/10">
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="w-full bg-primary hover:bg-primary-dark text-white py-2.5 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                  disabled={isLocked}
+                  className="w-full bg-primary hover:bg-primary-dark disabled:bg-primary/50 disabled:cursor-not-allowed text-white py-2.5 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -504,6 +622,12 @@ export function PresentationEditor({ presentation, initialSlides, initialSession
           saving={saving}
         />
       )}
+
+      {/* Upgrade modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+      />
     </div>
   )
 }
