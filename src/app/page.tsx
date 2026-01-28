@@ -354,7 +354,7 @@ export default function Home() {
             <a href="/terms" className="hover:text-text-primary transition-colors">
               Terms
             </a>
-            <a href="mailto:hello@pollio.se" className="hover:text-text-primary transition-colors">
+            <a href="/contact" className="hover:text-text-primary transition-colors">
               Contact
             </a>
           </div>
