@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
 import { AudienceView } from './AudienceView'
 import { getSubscriptionInfo, FREE_TIER_LIMITS } from '@/lib/subscription'
 
@@ -10,12 +11,14 @@ export default async function JoinSessionPage({
   const { code } = await params
   const supabase = await createClient()
 
-  // Look up session by code
+  // Look up session by code (active or ended)
   const { data: session, error } = await supabase
     .from('sessions')
     .select('*')
     .eq('code', code.toUpperCase())
-    .eq('status', 'active')
+    .in('status', ['active', 'ended'])
+    .order('started_at', { ascending: false })
+    .limit(1)
     .single()
 
   if (error || !session) {
@@ -33,7 +36,7 @@ export default async function JoinSessionPage({
           Code: <span className="font-mono font-bold">{code.toUpperCase()}</span>
         </p>
         <p className="text-sm text-text-secondary">
-          This session may have ended or the code is incorrect.
+          The code may be incorrect. Please check and try again.
         </p>
         <a
           href="/join"
@@ -41,6 +44,35 @@ export default async function JoinSessionPage({
         >
           Try a different code
         </a>
+      </div>
+    )
+  }
+
+  // Session has ended - show thank you message
+  if (session.status === 'ended') {
+    return (
+      <div className="text-center py-8">
+        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 className="text-xl font-semibold text-text-primary mb-2">
+          Session ended
+        </h1>
+        <p className="text-text-secondary mb-6">
+          Thanks for participating!
+        </p>
+
+        <Link
+          href="https://pollio.se"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-medium transition-colors"
+        >
+          Create your own Pollio
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </Link>
       </div>
     )
   }
