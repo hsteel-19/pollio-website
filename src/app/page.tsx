@@ -103,18 +103,21 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-6">
             <TestimonialCard
               quote="Finally, I can hear from everyone in the room — not just the usual few. The anonymous responses give me honest feedback."
-              name="Erik Lindqvist"
+              name="Erika Lindqvist"
               role="Team Leader"
+              image="/testimonial-erika.jpg"
             />
             <TestimonialCard
               quote="Setup took 2 minutes. My workshop participants loved how easy it was to join. Real engagement, not just nodding heads."
               name="Anna Bergström"
               role="Consultant"
+              image="/testimonial-anna.jpg"
             />
             <TestimonialCard
               quote="We replaced our old survey tool with Pollio. The live results keep people engaged throughout the entire meeting."
               name="Marcus Johansson"
               role="COO"
+              image="/testimonial-marcus.jpg"
             />
           </div>
         </div>
@@ -389,7 +392,7 @@ function BenefitCard({ number, title, description }: { number: string; title: st
   );
 }
 
-function TestimonialCard({ quote, name, role }: { quote: string; name: string; role: string }) {
+function TestimonialCard({ quote, name, role, image }: { quote: string; name: string; role: string; image: string }) {
   return (
     <div className="bg-background rounded-2xl p-6 border border-text-secondary/10">
       <div className="flex gap-1 mb-4">
@@ -400,9 +403,18 @@ function TestimonialCard({ quote, name, role }: { quote: string; name: string; r
         ))}
       </div>
       <p className="text-text-primary mb-4">&ldquo;{quote}&rdquo;</p>
-      <div>
-        <p className="font-medium text-text-primary">{name}</p>
-        <p className="text-sm text-text-secondary">{role}</p>
+      <div className="flex items-center gap-3">
+        <Image
+          src={image}
+          alt={name}
+          width={44}
+          height={44}
+          className="rounded-full object-cover"
+        />
+        <div>
+          <p className="font-medium text-text-primary">{name}</p>
+          <p className="text-sm text-text-secondary">{role}</p>
+        </div>
       </div>
     </div>
   );
