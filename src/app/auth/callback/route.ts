@@ -1,51 +1,55 @@
-import { createServerClient } from '@supabase/ssr'
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const error = searchParams.get('error')
   const error_description = searchParams.get('error_description')
-  const next = searchParams.get('next') ?? '/app'
-
-  const baseUrl = 'https://pollio.se'
 
   if (error) {
-    return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(error_description || error)}`)
+    return NextResponse.redirect(`https://pollio.se/login?error=${encodeURIComponent(error_description || error)}`)
   }
 
   if (!code) {
-    return NextResponse.redirect(`${baseUrl}/login?error=No+code`)
+    return NextResponse.redirect(`https://pollio.se/login?error=No+code`)
   }
 
-  // Create the redirect response FIRST
-  const redirectTo = new URL(next, baseUrl)
-  const response = NextResponse.redirect(redirectTo)
+  // Return an HTML page that handles the auth client-side
+  // This ensures cookies are set properly in the browser context
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Signing in...</title>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      </head>
+      <body>
+        <p>Signing you in...</p>
+        <script>
+          (async function() {
+            const supabase = window.supabase.createClient(
+              '${process.env.NEXT_PUBLIC_SUPABASE_URL}',
+              '${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}'
+            );
 
-  // Create Supabase client that sets cookies on the response
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
-          })
-        },
-      },
-    }
-  )
+            // Exchange the code for a session
+            const { data, error } = await supabase.auth.exchangeCodeForSession('${code}');
 
-  // Exchange the code for a session
-  const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+            if (error) {
+              console.error('Auth error:', error);
+              window.location.href = '/login?error=' + encodeURIComponent(error.message);
+            } else {
+              // Session is now stored in cookies by the client
+              window.location.href = '/app';
+            }
+          })();
+        </script>
+      </body>
+    </html>
+  `;
 
-  if (exchangeError) {
-    return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(exchangeError.message)}`)
-  }
-
-  return response
+  return new NextResponse(html, {
+    headers: { 'Content-Type': 'text/html' },
+  })
 }
