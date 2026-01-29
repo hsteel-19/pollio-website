@@ -9,8 +9,8 @@ export const config = {
   matcher: [
     /*
      * Only run middleware on protected routes that need auth
+     * Exclude /auth/callback - it handles cookies itself
      */
     '/app/:path*',
-    '/auth/:path*',
   ],
 }
