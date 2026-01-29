@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') ?? '/app'
 
   // Use environment variable or fallback to request origin
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pollio.se'
 
   // Handle error from OAuth provider
   if (error) {
@@ -23,8 +23,8 @@ export async function GET(request: Request) {
   if (code) {
     const cookieStore = await cookies()
 
-    // Track cookies that need to be set on the response
-    const cookiesToSet: { name: string; value: string; options: Record<string, unknown> }[] = []
+    // Create response first so we can set cookies on it
+    const response = NextResponse.redirect(`${baseUrl}${next}`)
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -34,9 +34,21 @@ export async function GET(request: Request) {
           getAll() {
             return cookieStore.getAll()
           },
-          setAll(cookies) {
-            cookies.forEach((cookie) => {
-              cookiesToSet.push(cookie)
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              // Set on both cookieStore and response
+              try {
+                cookieStore.set(name, value, options)
+              } catch {
+                // Ignore cookieStore errors
+              }
+              // Always set on response - this is the critical part
+              response.cookies.set(name, value, {
+                ...options,
+                // Ensure cookies work in production
+                secure: true,
+                sameSite: 'lax',
+              } as Record<string, unknown>)
             })
           },
         },
@@ -52,17 +64,9 @@ export async function GET(request: Request) {
       )
     }
 
-    // Create redirect response and attach cookies
-    const response = NextResponse.redirect(`${baseUrl}${next}`)
-
-    // Set all cookies on the response
-    cookiesToSet.forEach(({ name, value, options }) => {
-      response.cookies.set(name, value, options as Record<string, unknown>)
-    })
-
     return response
   }
 
   // No code and no error - something unexpected
-  return NextResponse.redirect(`${baseUrl}/login?error=No authentication code received`)
+  return NextResponse.redirect(`${baseUrl}/login?error=No+authentication+code+received`)
 }
