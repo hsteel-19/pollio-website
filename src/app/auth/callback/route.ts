@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// OAuth callback handler - currently disabled (Google auth hidden)
+// TODO: Debug cookie persistence issue when re-enabling Google auth
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
@@ -8,29 +10,18 @@ export async function GET(request: NextRequest) {
   const error_description = searchParams.get('error_description')
   const next = searchParams.get('next') ?? '/app'
 
-  // DEBUG LOGGING - remove after fix confirmed
-  console.log('=== AUTH CALLBACK HIT ===')
-  console.log('Full URL:', request.url)
-  console.log('Code exists:', !!code)
-  console.log('Error:', error)
-  console.log('Next:', next)
-
-  // Use origin from request, or fallback to production URL
   const baseUrl = origin || 'https://pollio.se'
 
   if (error) {
-    console.log('OAuth error, redirecting to login')
     return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(error_description || error)}`)
   }
 
   if (!code) {
-    console.log('No code provided, redirecting to login')
     return NextResponse.redirect(`${baseUrl}/login?error=No+code`)
   }
 
-  // Create response that we'll add cookies to
   const redirectUrl = `${baseUrl}${next}`
-  let response = NextResponse.redirect(redirectUrl)
+  const response = NextResponse.redirect(redirectUrl)
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,16 +32,14 @@ export async function GET(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          console.log('Setting cookies:', cookiesToSet.map(c => ({ name: c.name, options: c.options })))
-          const hostname = new URL(baseUrl).hostname  // pollio.se
+          const hostname = new URL(baseUrl).hostname
           cookiesToSet.forEach(({ name, value, options }) => {
-            // Force correct cookie options for whole site
             response.cookies.set(name, value, {
               ...options,
-              path: '/',           // CRITICAL: ensure cookie is sent to all paths
-              secure: true,        // Required for HTTPS
-              sameSite: 'lax',     // Allow cookie on navigation
-              domain: hostname,    // Explicitly set domain
+              path: '/',
+              secure: true,
+              sameSite: 'lax',
+              domain: hostname,
             })
           })
         },
@@ -58,21 +47,11 @@ export async function GET(request: NextRequest) {
     }
   )
 
-  console.log('Calling exchangeCodeForSession...')
-  const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+  const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
   if (exchangeError) {
-    console.error('Exchange error:', exchangeError.message)
     return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(exchangeError.message)}`)
   }
 
-  console.log('Exchange successful, user:', data?.user?.email)
-
-  // Log actual Set-Cookie headers being sent
-  const setCookieHeaders = response.headers.getSetCookie()
-  console.log('Set-Cookie headers count:', setCookieHeaders.length)
-  console.log('Set-Cookie headers:', setCookieHeaders.map(h => h.substring(0, 50) + '...'))
-
-  console.log('Redirecting to:', `${baseUrl}${next}`)
   return response
 }
