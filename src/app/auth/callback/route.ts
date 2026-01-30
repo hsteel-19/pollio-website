@@ -8,14 +8,23 @@ export async function GET(request: NextRequest) {
   const error_description = searchParams.get('error_description')
   const next = searchParams.get('next') ?? '/app'
 
+  // DEBUG LOGGING - remove after fix confirmed
+  console.log('=== AUTH CALLBACK HIT ===')
+  console.log('Full URL:', request.url)
+  console.log('Code exists:', !!code)
+  console.log('Error:', error)
+  console.log('Next:', next)
+
   // Use origin from request, or fallback to production URL
   const baseUrl = origin || 'https://pollio.se'
 
   if (error) {
+    console.log('OAuth error, redirecting to login')
     return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(error_description || error)}`)
   }
 
   if (!code) {
+    console.log('No code provided, redirecting to login')
     return NextResponse.redirect(`${baseUrl}/login?error=No+code`)
   }
 
@@ -40,12 +49,15 @@ export async function GET(request: NextRequest) {
     }
   )
 
-  const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+  console.log('Calling exchangeCodeForSession...')
+  const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
   if (exchangeError) {
     console.error('Exchange error:', exchangeError.message)
     return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(exchangeError.message)}`)
   }
 
+  console.log('Exchange successful, user:', data?.user?.email)
+  console.log('Redirecting to:', `${baseUrl}${next}`)
   return response
 }
