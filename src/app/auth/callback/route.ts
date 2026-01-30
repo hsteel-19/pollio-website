@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           console.log('Setting cookies:', cookiesToSet.map(c => ({ name: c.name, options: c.options })))
+          const hostname = new URL(baseUrl).hostname  // pollio.se
           cookiesToSet.forEach(({ name, value, options }) => {
             // Force correct cookie options for whole site
             response.cookies.set(name, value, {
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
               path: '/',           // CRITICAL: ensure cookie is sent to all paths
               secure: true,        // Required for HTTPS
               sameSite: 'lax',     // Allow cookie on navigation
-              httpOnly: true,      // Security best practice
+              domain: hostname,    // Explicitly set domain
             })
           })
         },
@@ -66,6 +67,12 @@ export async function GET(request: NextRequest) {
   }
 
   console.log('Exchange successful, user:', data?.user?.email)
+
+  // Log actual Set-Cookie headers being sent
+  const setCookieHeaders = response.headers.getSetCookie()
+  console.log('Set-Cookie headers count:', setCookieHeaders.length)
+  console.log('Set-Cookie headers:', setCookieHeaders.map(h => h.substring(0, 50) + '...'))
+
   console.log('Redirecting to:', `${baseUrl}${next}`)
   return response
 }
