@@ -41,8 +41,16 @@ export async function GET(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
+          console.log('Setting cookies:', cookiesToSet.map(c => ({ name: c.name, options: c.options })))
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
+            // Force correct cookie options for whole site
+            response.cookies.set(name, value, {
+              ...options,
+              path: '/',           // CRITICAL: ensure cookie is sent to all paths
+              secure: true,        // Required for HTTPS
+              sameSite: 'lax',     // Allow cookie on navigation
+              httpOnly: true,      // Security best practice
+            })
           })
         },
       },
