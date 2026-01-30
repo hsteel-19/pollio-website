@@ -1,23 +1,27 @@
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
+export async function GET(request: NextRequest) {
+  const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const error = searchParams.get('error')
   const error_description = searchParams.get('error_description')
   const next = searchParams.get('next') ?? '/app'
 
+  // Use origin from request, or fallback to production URL
+  const baseUrl = origin || 'https://pollio.se'
+
   if (error) {
-    return NextResponse.redirect(`https://pollio.se/login?error=${encodeURIComponent(error_description || error)}`)
+    return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(error_description || error)}`)
   }
 
   if (!code) {
-    return NextResponse.redirect(`https://pollio.se/login?error=No+code`)
+    return NextResponse.redirect(`${baseUrl}/login?error=No+code`)
   }
 
-  const cookieStore = await cookies()
+  // Create response that we'll add cookies to
+  const redirectUrl = `${baseUrl}${next}`
+  let response = NextResponse.redirect(redirectUrl)
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,11 +29,11 @@ export async function GET(request: Request) {
     {
       cookies: {
         getAll() {
-          return cookieStore.getAll()
+          return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options)
+            response.cookies.set(name, value, options)
           })
         },
       },
@@ -40,9 +44,8 @@ export async function GET(request: Request) {
 
   if (exchangeError) {
     console.error('Exchange error:', exchangeError.message)
-    return NextResponse.redirect(`https://pollio.se/login?error=${encodeURIComponent(exchangeError.message)}`)
+    return NextResponse.redirect(`${baseUrl}/login?error=${encodeURIComponent(exchangeError.message)}`)
   }
 
-  // Redirect to the app - cookies should now be set
-  return NextResponse.redirect(`https://pollio.se${next}`)
+  return response
 }

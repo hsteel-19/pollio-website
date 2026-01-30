@@ -8,9 +8,13 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Only run middleware on protected routes that need auth
+     * Run middleware on:
+     * - Protected routes that need auth (/app/*)
+     * - Auth pages to redirect logged-in users (/login, /signup)
      * Exclude /auth/callback - it handles cookies itself
      */
     '/app/:path*',
+    '/login',
+    '/signup',
   ],
 }
