@@ -184,7 +184,7 @@ export default function Home() {
       <section id="about" className="py-16 md:py-20 px-6 bg-surface">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-8 text-center">
-            Why I built Pollio
+            Why we built Pollio
           </h2>
           <div className="bg-background rounded-2xl p-8 md:p-10">
             <div className="text-text-secondary space-y-4">
