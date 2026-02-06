@@ -72,6 +72,13 @@ export function Header() {
               {t.header.pricing}
             </a>
             <a
+              href="/blogg"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"
+            >
+              {t.header.blog}
+            </a>
+            <a
               href="/login"
               onClick={() => setIsMenuOpen(false)}
               className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"

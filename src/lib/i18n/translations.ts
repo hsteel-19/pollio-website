@@ -10,13 +10,14 @@ export const translations = {
     header: {
       pricing: "Priser",
       login: "Logga in",
-      getStarted: "Kom igång gratis",
+      getStarted: "Starta gratis",
+      blog: "Blogg",
     },
     // Hero
     hero: {
       title: "Engagera alla i rummet — inte bara de högljudda",
       subtitle: "Skapa interaktiva omröstningar och frågor som deltagarna svarar på direkt från mobilen. Se resultaten live på skärmen.",
-      cta: "Kom igång gratis",
+      cta: "Starta gratis",
       noCreditCard: "Inget kreditkort krävs. Gratisplanen inkluderar 10 deltagare.",
       trustBadge: "🇸🇪 Din data lagras säkert i Sverige",
     },
@@ -233,6 +234,7 @@ export const translations = {
       pricing: "Pricing",
       login: "Log in",
       getStarted: "Get started free",
+      blog: "Blog",
     },
     // Hero
     hero: {
