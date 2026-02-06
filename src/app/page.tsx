@@ -400,6 +400,9 @@ export default function Home() {
               <Image src="/logo.svg" alt="Pollio" width={100} height={34} />
             </a>
             <div className="flex items-center gap-6 text-sm text-text-secondary">
+              <a href="/blogg" className="hover:text-text-primary transition-colors">
+                Blogg
+              </a>
               <a href="/privacy" className="hover:text-text-primary transition-colors">
                 {t.footer.privacy}
               </a>
