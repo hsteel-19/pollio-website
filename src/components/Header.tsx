@@ -38,7 +38,7 @@ export function Header() {
           <LanguageSwitcher />
           <a
             href="/signup"
-            className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors"
+            className="bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap"
           >
             {t.header.getStarted}
           </a>

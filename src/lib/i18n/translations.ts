@@ -17,7 +17,7 @@ export const translations = {
     hero: {
       title: "Engagera alla i rummet — inte bara de högljudda",
       subtitle: "Skapa interaktiva omröstningar och frågor som deltagarna svarar på direkt från mobilen. Se resultaten live på skärmen.",
-      cta: "Starta gratis",
+      cta: "Kom igång gratis",
       noCreditCard: "Inget kreditkort krävs. Gratisplanen inkluderar 10 deltagare.",
       trustBadge: "🇸🇪 Din data lagras säkert i Sverige",
     },
