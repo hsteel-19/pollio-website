@@ -18,13 +18,13 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-4">
+          <LanguageSwitcher />
           <a href="#pricing" className="text-text-secondary hover:text-text-primary transition-colors">
             {t.header.pricing}
           </a>
           <a href="/login" className="text-text-secondary hover:text-text-primary transition-colors">
             {t.header.login}
           </a>
-          <LanguageSwitcher />
           <a
             href="/signup"
             className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg font-medium transition-colors"

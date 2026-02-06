@@ -14,16 +14,16 @@ export const translations = {
     },
     // Hero
     hero: {
-      title: "Få direkt feedback från din publik",
-      subtitle: "Skapa interaktiva omröstningar och frågor som din publik svarar på direkt från mobilen. Se resultaten uppdateras live.",
+      title: "Engagera alla i rummet — inte bara de högljudda",
+      subtitle: "Skapa interaktiva omröstningar och frågor som deltagarna svarar på direkt från mobilen. Se resultaten live på skärmen.",
       cta: "Kom igång gratis",
       noCreditCard: "Inget kreditkort krävs. Gratisplanen inkluderar 10 deltagare.",
       trustBadge: "🇸🇪 Din data lagras säkert i Sverige",
     },
     // Problem
     problem: {
-      title: "Trött på att prata till en tyst sal?",
-      item1: 'Du frågar "Några frågor?" och möts av pinsam tystnad',
+      title: "Trött på att inte få reaktion från deltagarna?",
+      item1: 'Du frågar "Några frågor?" och möts av jobbig tystnad',
       item2: "Bara de mest högljudda säger något, medan andra är tysta",
       item3: "Du avslutar utan att veta om någon faktiskt förstod",
     },
