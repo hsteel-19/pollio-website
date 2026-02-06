@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import { Header } from "@/components/Header";
+import { useLanguage } from "@/lib/i18n";
 
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -25,22 +30,21 @@ export default function Home() {
         </div>
         <div className="max-w-3xl mx-auto text-center relative z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight mb-6">
-            Get instant feedback from your audience
+            {t.hero.title}
           </h1>
           <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
-            Create interactive polls and questions that your audience answers from their phones.
-            See results update live on screen.
+            {t.hero.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
             <a
               href="/signup"
               className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
             >
-              Get started free
+              {t.hero.cta}
             </a>
           </div>
           <p className="text-sm text-text-secondary">
-            No credit card required. Free plan includes 10 participants.
+            {t.hero.noCreditCard}
           </p>
         </div>
       </section>
@@ -49,18 +53,12 @@ export default function Home() {
       <section className="py-16 md:py-20 px-6 bg-surface">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-8 text-center">
-            Tired of talking to a silent room?
+            {t.problem.title}
           </h2>
           <div className="space-y-6">
-            <ProblemItem>
-              You ask "Any questions?" and get awkward silence
-            </ProblemItem>
-            <ProblemItem>
-              Only the loudest voices speak up, while others stay quiet
-            </ProblemItem>
-            <ProblemItem>
-              You finish without knowing if anyone actually understood
-            </ProblemItem>
+            <ProblemItem>{t.problem.item1}</ProblemItem>
+            <ProblemItem>{t.problem.item2}</ProblemItem>
+            <ProblemItem>{t.problem.item3}</ProblemItem>
           </div>
         </div>
       </section>
@@ -69,26 +67,26 @@ export default function Home() {
       <section id="how-it-works" className="py-16 md:py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-text-primary mb-4">
-            Turn passive listeners into active participants
+            {t.howItWorks.title}
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-2xl mx-auto">
-            With Pollio, everyone gets a voice — not just the extroverts.
+            {t.howItWorks.subtitle}
           </p>
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
             <BenefitCard
               number="1"
-              title="Create in seconds"
-              description="Add polls, scales, or open questions. No design skills needed."
+              title={t.howItWorks.step1Title}
+              description={t.howItWorks.step1Desc}
             />
             <BenefitCard
               number="2"
-              title="Everyone joins instantly"
-              description="Your audience scans a QR code or enters a short code. No app, no login."
+              title={t.howItWorks.step2Title}
+              description={t.howItWorks.step2Desc}
             />
             <BenefitCard
               number="3"
-              title="See results live"
-              description="Responses appear in real-time. Word clouds form as people answer."
+              title={t.howItWorks.step3Title}
+              description={t.howItWorks.step3Desc}
             />
           </div>
         </div>
@@ -98,25 +96,25 @@ export default function Home() {
       <section className="py-16 md:py-20 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-text-primary mb-12">
-            Trusted by presenters like you
+            {t.testimonials.title}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <TestimonialCard
-              quote="Finally, I can hear from everyone in the room — not just the usual few. The anonymous responses give me honest feedback."
-              name="Erika Lindqvist"
-              role="Team Leader"
+              quote={t.testimonials.quote1}
+              name={t.testimonials.name1}
+              role={t.testimonials.role1}
               image="/testimonial-erika.jpg"
             />
             <TestimonialCard
-              quote="Setup took 2 minutes. My workshop participants loved how easy it was to join. Real engagement, not just nodding heads."
-              name="Anna Bergström"
-              role="Consultant"
+              quote={t.testimonials.quote2}
+              name={t.testimonials.name2}
+              role={t.testimonials.role2}
               image="/testimonial-anna.jpg"
             />
             <TestimonialCard
-              quote="We replaced our old survey tool with Pollio. The live results keep people engaged throughout the entire meeting."
-              name="Marcus Johansson"
-              role="COO"
+              quote={t.testimonials.quote3}
+              name={t.testimonials.name3}
+              role={t.testimonials.role3}
               image="/testimonial-marcus.jpg"
             />
           </div>
@@ -127,16 +125,16 @@ export default function Home() {
       <section className="py-16 md:py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-text-primary mb-4">
-            Four ways to engage your audience
+            {t.features.title}
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-2xl mx-auto">
-            Each question type is designed to surface different insights.
+            {t.features.subtitle}
           </p>
           <div className="grid md:grid-cols-2 gap-6">
             <FeatureCard
-              title="Multiple Choice"
-              benefit="Quick pulse checks and decisions"
-              description="Perfect for voting, prioritizing options, or checking understanding. Results display as clear bar charts."
+              title={t.features.multipleChoice}
+              benefit={t.features.multipleChoiceBenefit}
+              description={t.features.multipleChoiceDesc}
               icon={
                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h10v2H4v-2z" />
@@ -145,9 +143,9 @@ export default function Home() {
               }
             />
             <FeatureCard
-              title="Scale Questions"
-              benefit="Measure agreement or satisfaction"
-              description="Let your audience rate from 1-5 or 1-10. See the average and distribution instantly."
+              title={t.features.scale}
+              benefit={t.features.scaleBenefit}
+              description={t.features.scaleDesc}
               icon={
                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
                   <rect x="3" y="14" width="4" height="6" rx="1" />
@@ -157,9 +155,9 @@ export default function Home() {
               }
             />
             <FeatureCard
-              title="Word Clouds"
-              benefit="Surface themes and ideas"
-              description="Collect short responses that form a visual word cloud. Popular answers appear larger."
+              title={t.features.wordCloud}
+              benefit={t.features.wordCloudBenefit}
+              description={t.features.wordCloudDesc}
               icon={
                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
@@ -167,9 +165,9 @@ export default function Home() {
               }
             />
             <FeatureCard
-              title="Open Ended"
-              benefit="Get detailed feedback"
-              description="When you need more than a vote. Collect longer text responses displayed in a clean list."
+              title={t.features.openEnded}
+              benefit={t.features.openEndedBenefit}
+              description={t.features.openEndedDesc}
               icon={
                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M21 6.5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-11zm-3 3H6v-1h12v1zm0 3H6v-1h12v1zm-6 3H6v-1h6v1z"/>
@@ -184,40 +182,26 @@ export default function Home() {
       <section id="about" className="py-16 md:py-20 px-6 bg-surface">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-8 text-center">
-            Why we built Pollio
+            {t.about.title}
           </h2>
           <div className="bg-background rounded-2xl p-8 md:p-10">
             <div className="text-text-secondary space-y-4">
-              <p>
-                Pollio started from a pattern I couldn&apos;t ignore: the meetings that mattered most were often the least interactive.
-                Even when the presentation was good, the room stayed passive — and valuable perspectives got lost.
-              </p>
-              <p>
-                As work became more digital, it got harder to read the room. Cameras off. People multitasking.
-                And as a manager, I didn&apos;t just want to &ldquo;present&rdquo; — I needed to know what people actually thought.
-                Were we aligned? Did this land? What are we missing?
-              </p>
-              <p>
-                So I built Pollio. I first used it in my own team and in our monthly company meetings as a COO.
-                The shift was immediate: people engaged, answered, voted, and asked questions they wouldn&apos;t raise out loud in a big group.
-                Meetings became clearer, more open, and honestly more fun — and the input made decisions better.
-              </p>
-              <p className="text-text-primary font-medium">
-                That&apos;s the mission behind Pollio: help presenters turn presentations into conversations,
-                so more voices are heard and every meeting creates real momentum.
-              </p>
+              <p>{t.about.p1}</p>
+              <p>{t.about.p2}</p>
+              <p>{t.about.p3}</p>
+              <p className="text-text-primary font-medium">{t.about.p4}</p>
             </div>
             <div className="mt-6 pt-6 border-t border-text-secondary/10 flex items-center gap-4">
               <Image
                 src="/henrik-founder.png"
-                alt="Henrik Ståhle"
+                alt={t.about.founder}
                 width={56}
                 height={56}
                 className="rounded-full object-cover"
               />
               <div>
-                <p className="text-text-primary font-medium">Henrik Ståhle</p>
-                <p className="text-text-secondary text-sm">Founder, Pollio</p>
+                <p className="text-text-primary font-medium">{t.about.founder}</p>
+                <p className="text-text-secondary text-sm">{t.about.founderRole}</p>
               </div>
             </div>
           </div>
@@ -228,53 +212,53 @@ export default function Home() {
       <section id="pricing" className="py-16 md:py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-text-primary mb-4">
-            Simple pricing, no surprises
+            {t.pricing.title}
           </h2>
           <p className="text-text-secondary text-center mb-12">
-            Start free. Upgrade when you need more.
+            {t.pricing.subtitle}
           </p>
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Free Plan */}
             <div className="bg-surface rounded-2xl p-6 md:p-8 border border-text-secondary/10">
-              <h3 className="text-xl font-bold text-text-primary mb-2">Free</h3>
-              <p className="text-text-secondary mb-4">Try it out, no commitment</p>
+              <h3 className="text-xl font-bold text-text-primary mb-2">{t.pricing.free}</h3>
+              <p className="text-text-secondary mb-4">{t.pricing.freeDesc}</p>
               <div className="text-3xl font-bold text-text-primary mb-6">
-                0 kr
+                {t.pricing.freePrice}
               </div>
               <ul className="space-y-3 mb-8">
-                <PricingFeature>1 presentation</PricingFeature>
-                <PricingFeature>Up to 10 participants</PricingFeature>
-                <PricingFeature>All question types</PricingFeature>
+                <PricingFeature>{t.pricing.freeFeature1}</PricingFeature>
+                <PricingFeature>{t.pricing.freeFeature2}</PricingFeature>
+                <PricingFeature>{t.pricing.freeFeature3}</PricingFeature>
               </ul>
               <a
                 href="/signup"
                 className="block text-center border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Try it out free
+                {t.pricing.freeCta}
               </a>
             </div>
 
             {/* Pro Plan */}
             <div className="bg-primary rounded-2xl p-6 md:p-8 text-white relative">
-              <h3 className="text-xl font-bold mb-2">Pro</h3>
-              <p className="text-white/80 mb-4">For professionals with unlimited use</p>
+              <h3 className="text-xl font-bold mb-2">{t.pricing.pro}</h3>
+              <p className="text-white/80 mb-4">{t.pricing.proDesc}</p>
               <div className="text-3xl font-bold mb-1">
-                129 kr<span className="text-base font-normal text-white/80">/month</span>
+                {t.pricing.proPrice}<span className="text-base font-normal text-white/80">{t.pricing.proPriceUnit}</span>
               </div>
-              <p className="text-white/60 text-sm mb-6">or 990 kr/year (save 36%)</p>
+              <p className="text-white/60 text-sm mb-6">{t.pricing.proYearly}</p>
               <ul className="space-y-3 mb-8">
-                <PricingFeature light>Unlimited presentations</PricingFeature>
-                <PricingFeature light>Unlimited participants</PricingFeature>
-                <PricingFeature light>Session history & reports</PricingFeature>
-                <PricingFeature light>Export results to CSV</PricingFeature>
+                <PricingFeature light>{t.pricing.proFeature1}</PricingFeature>
+                <PricingFeature light>{t.pricing.proFeature2}</PricingFeature>
+                <PricingFeature light>{t.pricing.proFeature3}</PricingFeature>
+                <PricingFeature light>{t.pricing.proFeature4}</PricingFeature>
               </ul>
               <a
                 href="/signup?plan=pro"
                 className="block text-center bg-white text-primary hover:bg-white/90 px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Go Pro
+                {t.pricing.proCta}
               </a>
-              <p className="text-white/60 text-xs text-center mt-3">Cancel anytime</p>
+              <p className="text-white/60 text-xs text-center mt-3">{t.pricing.cancelAnytime}</p>
             </div>
           </div>
         </div>
@@ -284,41 +268,17 @@ export default function Home() {
       <section className="py-16 md:py-20 px-6 bg-surface">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-text-primary mb-12">
-            Common questions
+            {t.faq.title}
           </h2>
           <div className="space-y-6">
-            <FAQItem
-              question="Do participants need to download an app?"
-              answer="No. Participants join by scanning a QR code or entering a short code in their phone browser. No app download, no sign-up required."
-            />
-            <FAQItem
-              question="How many people can join a session?"
-              answer="The free plan supports up to 10 participants per session. Pro plan has no limit — we've tested sessions with hundreds of people."
-            />
-            <FAQItem
-              question="What counts as a presentation?"
-              answer="One Pollio deck/session you create and run. The free plan lets you create 1 presentation, Pro gives you unlimited."
-            />
-            <FAQItem
-              question="Can I upgrade later?"
-              answer="Yes. You can switch to Pro anytime from your account settings. Your existing presentations and data stay intact."
-            />
-            <FAQItem
-              question="Are responses anonymous?"
-              answer="Yes, by default all responses are anonymous. Participants don't need to enter their name or create an account."
-            />
-            <FAQItem
-              question="Can I use Pollio for webinars or remote meetings?"
-              answer="Absolutely. Share your screen to show the presentation, and participants join from wherever they are using the code or QR."
-            />
-            <FAQItem
-              question="What happens to my data?"
-              answer="Your data is stored securely in the EU. We never sell your data or share it with third parties. You can export or delete your data anytime."
-            />
-            <FAQItem
-              question="Can I cancel anytime?"
-              answer="Yes. No long-term contracts. Cancel your subscription anytime and you'll keep access until the end of your billing period."
-            />
+            <FAQItem question={t.faq.q1} answer={t.faq.a1} />
+            <FAQItem question={t.faq.q2} answer={t.faq.a2} />
+            <FAQItem question={t.faq.q3} answer={t.faq.a3} />
+            <FAQItem question={t.faq.q4} answer={t.faq.a4} />
+            <FAQItem question={t.faq.q5} answer={t.faq.a5} />
+            <FAQItem question={t.faq.q6} answer={t.faq.a6} />
+            <FAQItem question={t.faq.q7} answer={t.faq.a7} />
+            <FAQItem question={t.faq.q8} answer={t.faq.a8} />
           </div>
         </div>
       </section>
@@ -327,16 +287,16 @@ export default function Home() {
       <section className="py-16 md:py-20 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-4">
-            Ready to hear from your audience?
+            {t.finalCta.title}
           </h2>
           <p className="text-text-secondary mb-8">
-            Create your first interactive presentation in minutes.
+            {t.finalCta.subtitle}
           </p>
           <a
             href="/signup"
             className="inline-block bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
           >
-            Get started free
+            {t.finalCta.cta}
           </a>
         </div>
       </section>
@@ -349,13 +309,13 @@ export default function Home() {
           </a>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
             <a href="/privacy" className="hover:text-text-primary transition-colors">
-              Privacy
+              {t.footer.privacy}
             </a>
             <a href="/terms" className="hover:text-text-primary transition-colors">
-              Terms
+              {t.footer.terms}
             </a>
             <a href="/contact" className="hover:text-text-primary transition-colors">
-              Contact
+              {t.footer.contact}
             </a>
           </div>
           <div className="text-text-secondary text-sm">

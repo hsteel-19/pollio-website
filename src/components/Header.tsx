@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-surface">
@@ -14,28 +17,30 @@ export function Header() {
         </a>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           <a href="#pricing" className="text-text-secondary hover:text-text-primary transition-colors">
-            Pricing
+            {t.header.pricing}
           </a>
           <a href="/login" className="text-text-secondary hover:text-text-primary transition-colors">
-            Log in
+            {t.header.login}
           </a>
+          <LanguageSwitcher />
           <a
             href="/signup"
             className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
           >
-            Get started free
+            {t.header.getStarted}
           </a>
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex md:hidden items-center gap-3">
+        <div className="flex md:hidden items-center gap-2">
+          <LanguageSwitcher />
           <a
             href="/signup"
             className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors"
           >
-            Get started free
+            {t.header.getStarted}
           </a>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -64,14 +69,14 @@ export function Header() {
               onClick={() => setIsMenuOpen(false)}
               className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"
             >
-              Pricing
+              {t.header.pricing}
             </a>
             <a
               href="/login"
               onClick={() => setIsMenuOpen(false)}
               className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"
             >
-              Log in
+              {t.header.login}
             </a>
           </div>
         </div>
