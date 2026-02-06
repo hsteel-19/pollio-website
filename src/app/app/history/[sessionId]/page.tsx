@@ -79,7 +79,12 @@ export default async function SessionDetailPage({
         </div>
       </div>
 
-      <SessionResults slides={slides || []} responses={responses || []} />
+      <SessionResults 
+        slides={slides || []} 
+        responses={responses || []} 
+        sessionCode={session.code}
+        presentationTitle={session.presentations?.title}
+      />
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-type SlideType = 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -23,36 +23,122 @@ interface Response {
 interface Props {
   slides: Slide[]
   responses: Response[]
+  sessionCode?: string
+  presentationTitle?: string
 }
 
 const slideTypeLabels: Record<SlideType, string> = {
+  welcome: 'Welcome',
   multiple_choice: 'Multiple Choice',
   scale: 'Scale',
   word_cloud: 'Word Cloud',
   open_ended: 'Open Ended',
 }
 
-export function SessionResults({ slides, responses }: Props) {
+// Export responses to CSV
+function exportToCSV(slides: Slide[], responses: Response[], presentationTitle?: string) {
+  const rows: string[][] = []
+  
+  // Header row
+  rows.push(['Question', 'Type', 'Participant ID', 'Answer', 'Timestamp'])
+  
+  // Filter out welcome slides
+  const questionSlides = slides.filter(s => s.type !== 'welcome')
+  
+  // Process each slide
+  questionSlides.forEach((slide) => {
+    const slideResponses = responses.filter((r) => r.slide_id === slide.id)
+    
+    slideResponses.forEach((response) => {
+      let answerText = ''
+      
+      switch (slide.type) {
+        case 'multiple_choice': {
+          const selected = (response.answer as { selected?: number[] }).selected || []
+          const options = (slide.settings.options as string[]) || []
+          answerText = selected.map((i) => options[i] || `Option ${i + 1}`).join(', ')
+          break
+        }
+        case 'scale': {
+          const value = (response.answer as { value?: number }).value
+          answerText = value?.toString() || ''
+          break
+        }
+        case 'word_cloud': {
+          const words = (response.answer as { words?: string[] }).words || []
+          answerText = words.join(', ')
+          break
+        }
+        case 'open_ended': {
+          answerText = (response.answer as { text?: string }).text || ''
+          break
+        }
+      }
+      
+      rows.push([
+        slide.title,
+        slideTypeLabels[slide.type],
+        response.participant_id.slice(0, 8), // Shortened for privacy
+        answerText,
+        new Date().toISOString(), // We don't have timestamp in response, use now
+      ])
+    })
+  })
+  
+  // Convert to CSV string
+  const csvContent = rows
+    .map((row) => row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+  
+  // Create download
+  const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `${presentationTitle || 'pollio-results'}-${new Date().toISOString().split('T')[0]}.csv`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+export function SessionResults({ slides, responses, sessionCode, presentationTitle }: Props) {
+  // Filter out welcome slides for display
+  const questionSlides = slides.filter(s => s.type !== 'welcome')
   const [selectedSlideIndex, setSelectedSlideIndex] = useState(0)
-  const selectedSlide = slides[selectedSlideIndex]
+  const selectedSlide = questionSlides[selectedSlideIndex]
   const slideResponses = responses.filter((r) => r.slide_id === selectedSlide?.id)
 
-  if (slides.length === 0) {
+  if (questionSlides.length === 0) {
     return (
       <div className="text-center py-12 bg-surface rounded-xl">
-        <p className="text-text-secondary">No slides in this session</p>
+        <p className="text-text-secondary">No question slides in this session</p>
       </div>
     )
   }
 
   return (
-    <div className="flex gap-6">
+    <div>
+      {/* Export button */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => exportToCSV(slides, responses, presentationTitle)}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Exportera till CSV
+        </button>
+      </div>
+
+      <div className="flex gap-6">
       {/* Slide navigation */}
       <div className="w-64 flex-shrink-0">
         <div className="bg-background border border-text-secondary/10 rounded-xl p-4">
           <h3 className="text-sm font-medium text-text-secondary mb-3">Slides</h3>
           <div className="space-y-2">
-            {slides.map((slide, index) => {
+            {questionSlides.map((slide, index) => {
               const count = responses.filter((r) => r.slide_id === slide.id).length
               return (
                 <button
@@ -121,6 +207,7 @@ export function SessionResults({ slides, responses }: Props) {
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }
