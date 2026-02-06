@@ -46,6 +46,9 @@ export default function Home() {
           <p className="text-sm text-text-secondary">
             {t.hero.noCreditCard}
           </p>
+          <p className="text-sm text-primary font-medium mt-3">
+            {t.hero.trustBadge}
+          </p>
         </div>
       </section>
 
@@ -303,23 +306,38 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-10 px-6 border-t border-surface">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <a href="/">
-            <Image src="/logo.svg" alt="Pollio" width={100} height={34} />
-          </a>
-          <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <a href="/privacy" className="hover:text-text-primary transition-colors">
-              {t.footer.privacy}
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <a href="/">
+              <Image src="/logo.svg" alt="Pollio" width={100} height={34} />
             </a>
-            <a href="/terms" className="hover:text-text-primary transition-colors">
-              {t.footer.terms}
-            </a>
-            <a href="/contact" className="hover:text-text-primary transition-colors">
-              {t.footer.contact}
-            </a>
+            <div className="flex items-center gap-6 text-sm text-text-secondary">
+              <a href="/privacy" className="hover:text-text-primary transition-colors">
+                {t.footer.privacy}
+              </a>
+              <a href="/terms" className="hover:text-text-primary transition-colors">
+                {t.footer.terms}
+              </a>
+              <a href="/contact" className="hover:text-text-primary transition-colors">
+                {t.footer.contact}
+              </a>
+            </div>
+            <div className="text-text-secondary text-sm">
+              © {new Date().getFullYear()} Pollio
+            </div>
           </div>
-          <div className="text-text-secondary text-sm">
-            © {new Date().getFullYear()} Pollio
+          <div className="flex items-center justify-center gap-4 mt-6 pt-6 border-t border-surface text-sm text-text-secondary">
+            <span className="flex items-center gap-1.5">
+              <span>🇸🇪</span>
+              {t.footer.hosting}
+            </span>
+            <span className="text-text-secondary/30">•</span>
+            <span className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              {t.footer.gdpr}
+            </span>
           </div>
         </div>
       </footer>

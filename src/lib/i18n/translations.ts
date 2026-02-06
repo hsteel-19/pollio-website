@@ -18,6 +18,7 @@ export const translations = {
       subtitle: "Skapa interaktiva omröstningar och frågor som din publik svarar på direkt från mobilen. Se resultaten uppdateras live.",
       cta: "Kom igång gratis",
       noCreditCard: "Inget kreditkort krävs. Gratisplanen inkluderar 10 deltagare.",
+      trustBadge: "🇸🇪 Din data lagras säkert i Sverige",
     },
     // Problem
     problem: {
@@ -116,7 +117,7 @@ export const translations = {
       q6: "Kan jag använda Pollio för webbinarier eller distansmöten?",
       a6: "Absolut. Dela din skärm för att visa presentationen, och deltagarna går med var de än är via koden eller QR.",
       q7: "Vad händer med min data?",
-      a7: "Din data lagras säkert i EU. Vi säljer aldrig din data eller delar den med tredje part. Du kan exportera eller radera din data när som helst.",
+      a7: "Din data lagras säkert i Sverige — inte USA eller någon annanstans. Vi säljer aldrig din data eller delar den med tredje part. Fullt GDPR-kompatibelt. Du kan exportera eller radera din data när som helst.",
       q8: "Kan jag avsluta när som helst?",
       a8: "Ja. Inga långtidsavtal. Avsluta din prenumeration när som helst och du behåller tillgången till slutet av din faktureringsperiod.",
     },
@@ -131,6 +132,8 @@ export const translations = {
       privacy: "Integritet",
       terms: "Villkor",
       contact: "Kontakt",
+      hosting: "Hostad i Sverige",
+      gdpr: "GDPR-kompatibel",
     },
   },
   en: {
@@ -152,6 +155,7 @@ export const translations = {
       subtitle: "Create interactive polls and questions that your audience answers from their phones. See results update live on screen.",
       cta: "Get started free",
       noCreditCard: "No credit card required. Free plan includes 10 participants.",
+      trustBadge: "🇸🇪 Your data is stored securely in Sweden",
     },
     // Problem
     problem: {
@@ -250,7 +254,7 @@ export const translations = {
       q6: "Can I use Pollio for webinars or remote meetings?",
       a6: "Absolutely. Share your screen to show the presentation, and participants join from wherever they are using the code or QR.",
       q7: "What happens to my data?",
-      a7: "Your data is stored securely in the EU. We never sell your data or share it with third parties. You can export or delete your data anytime.",
+      a7: "Your data is stored securely in Sweden — not the US or anywhere else. We never sell your data or share it with third parties. Fully GDPR compliant. You can export or delete your data anytime.",
       q8: "Can I cancel anytime?",
       a8: "Yes. No long-term contracts. Cancel your subscription anytime and you'll keep access until the end of your billing period.",
     },
@@ -265,6 +269,8 @@ export const translations = {
       privacy: "Privacy",
       terms: "Terms",
       contact: "Contact",
+      hosting: "Hosted in Sweden",
+      gdpr: "GDPR compliant",
     },
   },
 } as const;
