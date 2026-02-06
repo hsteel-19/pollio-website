@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 import { UpgradeModal } from '@/components/UpgradeModal'
+import { useLanguage } from '@/lib/i18n'
 
 interface SidebarProps {
   userEmail: string
@@ -17,6 +18,7 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const { t } = useLanguage()
 
   const handleLogout = async () => {
     const supabase = createClient()
@@ -25,8 +27,8 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
   }
 
   const navItems = [
-    { href: '/app', label: 'Home', exact: true },
-    { href: '/app/presentations', label: 'My presentations', exact: false },
+    { href: '/app', label: t.app.sidebar.home, exact: true },
+    { href: '/app/presentations', label: t.app.sidebar.myPresentations, exact: false },
   ]
 
   const isActive = (href: string, exact: boolean) => {
@@ -67,7 +69,7 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
               : 'text-text-secondary hover:bg-surface hover:text-text-primary'
           }`}
         >
-          Settings
+          {t.app.sidebar.settings}
         </Link>
       </nav>
 
@@ -78,7 +80,7 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
             onClick={() => setShowUpgradeModal(true)}
             className="w-full mb-3 bg-primary hover:bg-primary-dark text-white py-2.5 px-4 rounded-lg font-medium transition-colors text-sm"
           >
-            Upgrade to Pro
+            {t.app.sidebar.upgradeToPro}
           </button>
         )}
 
@@ -89,11 +91,11 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
             </div>
             {isPro ? (
               <span className="bg-primary/10 text-primary text-xs font-medium px-2 py-0.5 rounded-full">
-                Pro
+                {t.app.sidebar.pro}
               </span>
             ) : (
               <span className="bg-text-secondary/10 text-text-secondary text-xs font-medium px-2 py-0.5 rounded-full">
-                Free
+                {t.app.sidebar.free}
               </span>
             )}
           </div>
@@ -105,7 +107,7 @@ export function Sidebar({ userEmail, userName, isPro }: SidebarProps) {
           onClick={handleLogout}
           className="w-full px-4 py-2 text-left text-sm text-text-secondary hover:bg-surface hover:text-text-primary rounded-lg transition-colors"
         >
-          Log out
+          {t.app.sidebar.logout}
         </button>
       </div>
 
