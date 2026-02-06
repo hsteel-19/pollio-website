@@ -47,8 +47,10 @@ interface Props {
 export function PresenterView({ session, slides, initialResponses }: Props) {
   const [activeSlideId, setActiveSlideId] = useState(session.active_slide_id)
   const [responses, setResponses] = useState<Response[]>(initialResponses)
-  const [participantCount, setParticipantCount] = useState(session.participant_count)
   const [sessionStatus, setSessionStatus] = useState(session.status)
+  
+  // Calculate unique participant count from responses
+  const participantCount = new Set(responses.map(r => r.participant_id)).size
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showSidebar, setShowSidebar] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -137,7 +139,6 @@ export function PresenterView({ session, slides, initialResponses }: Props) {
         },
         (payload) => {
           const updated = payload.new as Session
-          setParticipantCount(updated.participant_count)
           setSessionStatus(updated.status)
         }
       )
