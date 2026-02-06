@@ -34,11 +34,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       publishedTime: post.date,
       authors: [post.author],
+      images: [
+        {
+          url: `https://pollio.se${post.image}`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      images: [`https://pollio.se${post.image}`],
     },
   }
 }
@@ -70,6 +79,7 @@ export default async function BlogPostPage({ params }: Props) {
     '@type': 'Article',
     headline: post.title,
     description: post.description,
+    image: `https://pollio.se${post.image}`,
     author: {
       '@type': 'Person',
       name: post.author,
@@ -136,6 +146,17 @@ export default async function BlogPostPage({ params }: Props) {
               })}
             </time>
           </div>
+        </div>
+
+        {/* Featured image */}
+        <div className="relative aspect-[1200/630] rounded-xl overflow-hidden mb-10 bg-surface">
+          <Image 
+            src={post.image} 
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
 
         {/* Article content */}

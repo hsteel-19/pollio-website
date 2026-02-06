@@ -55,6 +55,15 @@ export default function BlogPage() {
           {posts.map((post) => (
             <article key={post.slug} className="border-b border-surface pb-8 last:border-0">
               <Link href={`/blogg/${post.slug}`} className="group block">
+                {/* Featured image */}
+                <div className="relative aspect-[1200/630] rounded-xl overflow-hidden mb-4 bg-surface">
+                  <Image 
+                    src={post.image} 
+                    alt={post.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColors[post.category]}`}>
                     {categoryLabels[post.category]}

@@ -1,0 +1,49 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F0FDFA"/>
+  <rect x="60" y="60" width="1080" height="510" rx="24" fill="white" stroke="#14B8A6" stroke-width="2"/>
+  
+  <!-- Whiteboard -->
+  <rect x="350" y="120" width="500" height="260" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
+  
+  <!-- Post-it style elements -->
+  <rect x="380" y="150" width="100" height="80" rx="4" fill="#FEF3C7" transform="rotate(-3 380 150)"/>
+  <text x="430" y="195" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#92400E" text-anchor="middle">Idé A</text>
+  
+  <rect x="500" y="145" width="100" height="80" rx="4" fill="#DBEAFE" transform="rotate(2 500 145)"/>
+  <text x="550" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#1E40AF" text-anchor="middle">Idé B</text>
+  
+  <rect x="620" y="150" width="100" height="80" rx="4" fill="#D1FAE5" transform="rotate(-1 620 150)"/>
+  <text x="670" y="195" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#065F46" text-anchor="middle">Idé C</text>
+  
+  <rect x="740" y="148" width="100" height="80" rx="4" fill="#FCE7F3" transform="rotate(3 740 148)"/>
+  <text x="790" y="193" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#9D174D" text-anchor="middle">Idé D</text>
+  
+  <!-- Voting results bar -->
+  <rect x="380" y="260" width="460" height="60" rx="8" fill="white" stroke="#14B8A6" stroke-width="2"/>
+  <text x="400" y="295" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#0F172A">Rösta på bästa idén:</text>
+  <rect x="560" y="275" width="120" height="20" rx="4" fill="#14B8A6"/>
+  <rect x="690" y="275" width="80" height="20" rx="4" fill="#14B8A6" fill-opacity="0.6"/>
+  <rect x="780" y="275" width="40" height="20" rx="4" fill="#14B8A6" fill-opacity="0.3"/>
+  
+  <!-- Facilitator -->
+  <g transform="translate(180, 220)">
+    <circle cx="40" cy="40" r="40" fill="#14B8A6" fill-opacity="0.2"/>
+    <text x="40" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="36" text-anchor="middle">👩‍🏫</text>
+  </g>
+  
+  <!-- Participants with phones -->
+  <g transform="translate(920, 180)">
+    <circle cx="30" cy="30" r="30" fill="#E2E8F0"/>
+    <text x="30" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle">👤</text>
+    <rect x="50" y="15" width="18" height="30" rx="3" fill="#14B8A6"/>
+  </g>
+  <g transform="translate(950, 280)">
+    <circle cx="30" cy="30" r="30" fill="#E2E8F0"/>
+    <text x="30" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle">👤</text>
+    <rect x="50" y="15" width="18" height="30" rx="3" fill="#14B8A6"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="600" y="480" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="#0F172A" text-anchor="middle">Workshops med live-omröstningar</text>
+  <text x="600" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#64748B" text-anchor="middle">Praktisk guide för engagerande workshops</text>
+</svg>

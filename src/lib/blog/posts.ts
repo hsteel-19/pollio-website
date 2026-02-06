@@ -7,6 +7,7 @@ export interface BlogPost {
   category: 'jamforelse' | 'guide' | 'tips';
   keywords: string[];
   readTime: number;
+  image: string;
 }
 
 export const blogPosts: BlogPost[] = [
@@ -19,6 +20,7 @@ export const blogPosts: BlogPost[] = [
     category: 'jamforelse',
     keywords: ['mentimeter alternativ', 'pollio vs mentimeter', 'interaktiva presentationer', 'live omröstningar'],
     readTime: 8,
+    image: '/blog/mentimeter-alternativ.svg',
   },
   {
     slug: 'slido-alternativ',
@@ -29,6 +31,7 @@ export const blogPosts: BlogPost[] = [
     category: 'jamforelse',
     keywords: ['slido alternativ', 'pollio vs slido', 'frågestund', 'Q&A verktyg'],
     readTime: 6,
+    image: '/blog/slido-alternativ.svg',
   },
   {
     slug: 'kahoot-alternativ-foretag',
@@ -39,6 +42,7 @@ export const blogPosts: BlogPost[] = [
     category: 'jamforelse',
     keywords: ['kahoot alternativ', 'kahoot för företag', 'professionella omröstningar', 'möten'],
     readTime: 5,
+    image: '/blog/kahoot-alternativ-foretag.svg',
   },
   {
     slug: 'interaktiva-presentationer-guide',
@@ -49,6 +53,7 @@ export const blogPosts: BlogPost[] = [
     category: 'guide',
     keywords: ['interaktiva presentationer', 'engagera publik', 'presentationstips', 'live feedback'],
     readTime: 10,
+    image: '/blog/interaktiva-presentationer-guide.svg',
   },
   {
     slug: 'live-omrostningar-moten',
@@ -59,6 +64,7 @@ export const blogPosts: BlogPost[] = [
     category: 'guide',
     keywords: ['live omröstningar', 'omröstningar möten', 'beslutsstöd', 'mötesverktyg'],
     readTime: 7,
+    image: '/blog/live-omrostningar-moten.svg',
   },
   {
     slug: 'basta-verktyg-publikfragor',
@@ -69,6 +75,7 @@ export const blogPosts: BlogPost[] = [
     category: 'guide',
     keywords: ['publikfrågor', 'Q&A verktyg', 'frågestund', 'konferens'],
     readTime: 8,
+    image: '/blog/basta-verktyg-publikfragor.svg',
   },
   {
     slug: 'feedback-medarbetare-anonyma-omrostningar',
@@ -79,6 +86,7 @@ export const blogPosts: BlogPost[] = [
     category: 'tips',
     keywords: ['medarbetarfeedback', 'anonyma omröstningar', 'HR verktyg', 'teamfeedback'],
     readTime: 6,
+    image: '/blog/feedback-medarbetare-anonyma-omrostningar.svg',
   },
   {
     slug: 'workshops-live-omrostningar',
@@ -89,6 +97,7 @@ export const blogPosts: BlogPost[] = [
     category: 'tips',
     keywords: ['workshop', 'live omröstningar', 'facilitering', 'grupparbete'],
     readTime: 7,
+    image: '/blog/workshops-live-omrostningar.svg',
   },
 ];
 

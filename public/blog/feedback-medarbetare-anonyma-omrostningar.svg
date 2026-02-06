@@ -1,0 +1,43 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F0FDFA"/>
+  <rect x="60" y="60" width="1080" height="510" rx="24" fill="white" stroke="#14B8A6" stroke-width="2"/>
+  
+  <!-- Anonymous feedback bubbles -->
+  <g transform="translate(200, 180)">
+    <rect x="0" y="0" width="280" height="80" rx="40" fill="#14B8A6" fill-opacity="0.1"/>
+    <circle cx="50" cy="40" r="25" fill="#14B8A6" fill-opacity="0.3"/>
+    <text x="50" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle">🙈</text>
+    <text x="170" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#0F172A" text-anchor="middle">"Vi behöver fler pauser"</text>
+  </g>
+  
+  <g transform="translate(720, 180)">
+    <rect x="0" y="0" width="280" height="80" rx="40" fill="#14B8A6" fill-opacity="0.1"/>
+    <circle cx="50" cy="40" r="25" fill="#14B8A6" fill-opacity="0.3"/>
+    <text x="50" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle">🙈</text>
+    <text x="170" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#0F172A" text-anchor="middle">"Mötena är för långa"</text>
+  </g>
+  
+  <g transform="translate(350, 290)">
+    <rect x="0" y="0" width="280" height="80" rx="40" fill="#14B8A6" fill-opacity="0.15"/>
+    <circle cx="50" cy="40" r="25" fill="#14B8A6" fill-opacity="0.3"/>
+    <text x="50" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle">🙈</text>
+    <text x="170" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#0F172A" text-anchor="middle">"Bra ledarskap! 👍"</text>
+  </g>
+  
+  <g transform="translate(550, 290)">
+    <rect x="0" y="0" width="300" height="80" rx="40" fill="#14B8A6" fill-opacity="0.15"/>
+    <circle cx="50" cy="40" r="25" fill="#14B8A6" fill-opacity="0.3"/>
+    <text x="50" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="24" text-anchor="middle">🙈</text>
+    <text x="180" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#0F172A" text-anchor="middle">"Oklara mål ibland"</text>
+  </g>
+  
+  <!-- Shield/privacy icon -->
+  <g transform="translate(560, 120)">
+    <circle cx="40" cy="40" r="35" fill="#14B8A6"/>
+    <text x="40" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="32" text-anchor="middle">🔒</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="600" y="480" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="#0F172A" text-anchor="middle">Feedback med anonyma omröstningar</text>
+  <text x="600" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#64748B" text-anchor="middle">Så får du ärlig feedback från ditt team</text>
+</svg>
