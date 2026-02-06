@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLanguage } from '@/lib/i18n'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -13,6 +14,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
 
   // Check for error in URL (from OAuth callback)
   useEffect(() => {
@@ -50,14 +52,14 @@ function LoginForm() {
           <Link href="/" className="inline-block">
             <Image src="/logo.svg" alt="Pollio" width={120} height={40} priority />
           </Link>
-          <h1 className="text-2xl font-bold text-text-primary mt-6 mb-2">Welcome back</h1>
-          <p className="text-text-secondary">Log in to your account</p>
+          <h1 className="text-2xl font-bold text-text-primary mt-6 mb-2">{t.app.auth.welcomeBack}</h1>
+          <p className="text-text-secondary">{t.app.auth.loginDesc}</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-1">
-              Email
+              {t.app.auth.email}
             </label>
             <input
               id="email"
@@ -65,14 +67,14 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
-              placeholder="you@example.com"
+              placeholder={t.app.auth.emailPlaceholder}
               required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-text-primary mb-1">
-              Password
+              {t.app.auth.password}
             </label>
             <input
               id="password"
@@ -80,7 +82,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
-              placeholder="••••••••"
+              placeholder={t.app.auth.passwordPlaceholder}
               required
             />
           </div>
@@ -96,14 +98,14 @@ function LoginForm() {
             disabled={loading}
             className="w-full bg-primary hover:bg-primary-dark disabled:bg-primary/50 text-white py-3 rounded-lg font-semibold transition-colors"
           >
-            {loading ? 'Logging in...' : 'Log in'}
+            {loading ? t.app.auth.loggingIn : t.app.auth.loginButton}
           </button>
         </form>
 
         <p className="text-center text-text-secondary mt-6">
-          Don't have an account?{' '}
+          {t.app.auth.noAccount}{' '}
           <Link href="/signup" className="text-primary hover:underline font-medium">
-            Sign up
+            {t.app.auth.signUp}
           </Link>
         </p>
       </div>

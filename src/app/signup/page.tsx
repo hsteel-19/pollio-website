@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLanguage } from '@/lib/i18n'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -12,6 +13,7 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { t } = useLanguage()
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,9 +51,9 @@ export default function SignupPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-text-primary mb-2">Check your email</h1>
+          <h1 className="text-2xl font-bold text-text-primary mb-2">{t.app.auth.checkEmail}</h1>
           <p className="text-text-secondary">
-            We've sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account.
+            {t.app.auth.confirmationSent} <strong>{email}</strong>. {t.app.auth.clickToActivate}
           </p>
         </div>
       </div>
@@ -65,14 +67,14 @@ export default function SignupPage() {
           <Link href="/" className="inline-block">
             <Image src="/logo.svg" alt="Pollio" width={120} height={40} priority />
           </Link>
-          <h1 className="text-2xl font-bold text-text-primary mt-6 mb-2">Create your account</h1>
-          <p className="text-text-secondary">Start creating interactive presentations</p>
+          <h1 className="text-2xl font-bold text-text-primary mt-6 mb-2">{t.app.auth.createAccount}</h1>
+          <p className="text-text-secondary">{t.app.auth.createAccountDesc}</p>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-text-primary mb-1">
-              Full name
+              {t.app.auth.fullName}
             </label>
             <input
               id="fullName"
@@ -80,14 +82,14 @@ export default function SignupPage() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="w-full px-4 py-3 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
-              placeholder="John Doe"
+              placeholder={t.app.auth.fullNamePlaceholder}
               required
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-1">
-              Email
+              {t.app.auth.email}
             </label>
             <input
               id="email"
@@ -95,14 +97,14 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
-              placeholder="you@example.com"
+              placeholder={t.app.auth.emailPlaceholder}
               required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-text-primary mb-1">
-              Password
+              {t.app.auth.password}
             </label>
             <input
               id="password"
@@ -110,7 +112,7 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
-              placeholder="••••••••"
+              placeholder={t.app.auth.passwordPlaceholder}
               minLength={6}
               required
             />
@@ -127,14 +129,14 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full bg-primary hover:bg-primary-dark disabled:bg-primary/50 text-white py-3 rounded-lg font-semibold transition-colors"
           >
-            {loading ? 'Creating account...' : 'Create account'}
+            {loading ? t.app.auth.signingUp : t.app.auth.signupButton}
           </button>
         </form>
 
         <p className="text-center text-text-secondary mt-6">
-          Already have an account?{' '}
+          {t.app.auth.alreadyHaveAccount}{' '}
           <Link href="/login" className="text-primary hover:underline font-medium">
-            Log in
+            {t.app.auth.logIn}
           </Link>
         </p>
       </div>
