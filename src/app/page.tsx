@@ -1,14 +1,102 @@
 "use client";
 
 import Image from "next/image";
+import Script from "next/script";
 import { Header } from "@/components/Header";
 import { useLanguage } from "@/lib/i18n";
+
+// JSON-LD structured data for SEO
+const softwareJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Pollio",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Skapa interaktiva omröstningar och frågor som din publik svarar på direkt från mobilen. Se resultaten live.",
+  "url": "https://pollio.se",
+  "author": {
+    "@type": "Person",
+    "name": "Henrik Ståhle"
+  },
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Gratis",
+      "price": "0",
+      "priceCurrency": "SEK",
+      "description": "1 presentation, upp till 10 deltagare"
+    },
+    {
+      "@type": "Offer", 
+      "name": "Pro",
+      "price": "129",
+      "priceCurrency": "SEK",
+      "priceValidUntil": "2027-12-31",
+      "description": "Obegränsade presentationer och deltagare"
+    }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "reviewCount": "3"
+  }
+};
+
+// FAQ Schema for rich snippets
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Behöver deltagarna ladda ner en app?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nej. Deltagarna går med genom att skanna en QR-kod eller skriva in en kort kod i sin mobilwebbläsare. Ingen app, ingen registrering."
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "Hur många kan delta i en session?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gratisplanen stöder upp till 10 deltagare per session. Pro-planen har ingen gräns."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Är svaren anonyma?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ja, som standard är alla svar anonyma. Deltagarna behöver inte ange sitt namn eller skapa ett konto."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Var lagras min data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Din data lagras säkert i Sverige. Vi säljer aldrig din data eller delar den med tredje part. Fullt GDPR-kompatibelt."
+      }
+    }
+  ]
+};
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background">
+      <Script
+        id="software-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
+      />
+      <Script
+        id="faq-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <Header />
 
       {/* 1. Hero Section */}
