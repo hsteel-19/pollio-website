@@ -1,6 +1,6 @@
 'use client'
 
-type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -37,8 +37,8 @@ const CHART_COLOR = { bg: 'bg-primary', text: 'text-primary', light: 'bg-primary
 const WORD_COLOR = 'text-primary'
 
 export function ResultsDisplay({ slide, responses }: Props) {
-  // Welcome slides don't have responses
-  if (slide.type === 'welcome') {
+  // Welcome and content slides don't have responses
+  if (slide.type === 'welcome' || slide.type === 'content') {
     return null
   }
 

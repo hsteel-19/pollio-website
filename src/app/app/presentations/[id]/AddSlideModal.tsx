@@ -1,6 +1,6 @@
 'use client'
 
-type SlideType = 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Props {
   onAdd: (type: SlideType) => void
@@ -9,6 +9,18 @@ interface Props {
 }
 
 const slideTypes: { type: SlideType; label: string; description: string; color: string; bgColor: string; icon: React.ReactNode }[] = [
+  {
+    type: 'content',
+    label: 'Content',
+    description: 'Headline, text, or image — no interaction',
+    color: 'text-sky-500',
+    bgColor: 'bg-sky-50',
+    icon: (
+      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4 4h16v4H4V4zm0 6h10v2H4v-2zm0 4h16v2H4v-2zm0 4h10v2H4v-2z" />
+      </svg>
+    ),
+  },
   {
     type: 'multiple_choice',
     label: 'Multiple Choice',

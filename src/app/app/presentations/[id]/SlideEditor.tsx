@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -216,27 +216,31 @@ export function SlideEditor({
           </div>
 
           {/* Type-specific settings */}
-          <div className="bg-background rounded-xl p-6 border border-text-secondary/10">
-            <h3 className="text-sm font-medium text-text-secondary mb-4">
-              {slide.type === 'multiple_choice' && 'Answer options'}
-              {slide.type === 'scale' && 'Scale settings'}
-              {slide.type === 'word_cloud' && 'Word cloud settings'}
-              {slide.type === 'open_ended' && 'Response settings'}
-            </h3>
+          {slide.type === 'content' ? (
+            <ContentSettings settings={settings} onUpdate={updateSettings} />
+          ) : (
+            <div className="bg-background rounded-xl p-6 border border-text-secondary/10">
+              <h3 className="text-sm font-medium text-text-secondary mb-4">
+                {slide.type === 'multiple_choice' && 'Answer options'}
+                {slide.type === 'scale' && 'Scale settings'}
+                {slide.type === 'word_cloud' && 'Word cloud settings'}
+                {slide.type === 'open_ended' && 'Response settings'}
+              </h3>
 
-            {slide.type === 'multiple_choice' && (
-              <MultipleChoiceSettings settings={settings} onUpdate={updateSettings} />
-            )}
-            {slide.type === 'scale' && (
-              <ScaleSettings settings={settings} onUpdate={updateSettings} />
-            )}
-            {slide.type === 'word_cloud' && (
-              <WordCloudSettings settings={settings} onUpdate={updateSettings} />
-            )}
-            {slide.type === 'open_ended' && (
-              <OpenEndedSettings settings={settings} onUpdate={updateSettings} />
-            )}
-          </div>
+              {slide.type === 'multiple_choice' && (
+                <MultipleChoiceSettings settings={settings} onUpdate={updateSettings} />
+              )}
+              {slide.type === 'scale' && (
+                <ScaleSettings settings={settings} onUpdate={updateSettings} />
+              )}
+              {slide.type === 'word_cloud' && (
+                <WordCloudSettings settings={settings} onUpdate={updateSettings} />
+              )}
+              {slide.type === 'open_ended' && (
+                <OpenEndedSettings settings={settings} onUpdate={updateSettings} />
+              )}
+            </div>
+          )}
         </>
       )}
 
@@ -268,6 +272,86 @@ export function SlideEditor({
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+// Content Settings (for content slides - no interaction)
+function ContentSettings({
+  settings,
+  onUpdate,
+}: {
+  settings: Record<string, unknown>
+  onUpdate: (settings: Record<string, unknown>) => void
+}) {
+  const body = (settings.body as string) || ''
+  const imageUrl = (settings.image_url as string) || ''
+
+  return (
+    <div className="space-y-6">
+      {/* Body text */}
+      <div className="bg-background rounded-xl p-6 border border-text-secondary/10">
+        <h3 className="text-sm font-medium text-text-secondary mb-4">Content body</h3>
+        <textarea
+          value={body}
+          onChange={(e) => onUpdate({ ...settings, body: e.target.value })}
+          className="w-full px-4 py-3 bg-surface border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none resize-none"
+          placeholder="Add your content text here. Supports multiple paragraphs."
+          rows={6}
+        />
+        <p className="text-xs text-text-secondary mt-2">
+          Use this to add context, explanations, or talking points between questions.
+        </p>
+      </div>
+
+      {/* Image URL */}
+      <div className="bg-background rounded-xl p-6 border border-text-secondary/10">
+        <h3 className="text-sm font-medium text-text-secondary mb-4">Image (optional)</h3>
+        <input
+          type="url"
+          value={imageUrl}
+          onChange={(e) => onUpdate({ ...settings, image_url: e.target.value })}
+          className="w-full px-4 py-3 bg-surface border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
+          placeholder="https://example.com/image.jpg"
+        />
+        <p className="text-xs text-text-secondary mt-2">
+          Paste a URL to an image. Supports JPG, PNG, GIF, and WebP.
+        </p>
+        
+        {/* Image preview */}
+        {imageUrl && (
+          <div className="mt-4">
+            <p className="text-xs text-text-secondary mb-2">Preview:</p>
+            <div className="relative aspect-video bg-surface rounded-lg overflow-hidden border border-text-secondary/10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src={imageUrl} 
+                alt="Preview" 
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Info box */}
+      <div className="bg-sky-50 border border-sky-200 rounded-xl p-4">
+        <div className="flex items-start gap-3">
+          <svg className="w-5 h-5 text-sky-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p className="text-sm text-sky-800 font-medium">Content slides have no interaction</p>
+            <p className="text-xs text-sky-600 mt-1">
+              This slide will be shown to your audience but they won&apos;t need to respond. 
+              Use it to introduce topics, share information, or transition between questions.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

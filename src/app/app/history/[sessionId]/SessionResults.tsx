@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -29,6 +29,7 @@ interface Props {
 
 const slideTypeLabels: Record<SlideType, string> = {
   welcome: 'Welcome',
+  content: 'Content',
   multiple_choice: 'Multiple Choice',
   scale: 'Scale',
   word_cloud: 'Word Cloud',
@@ -103,8 +104,8 @@ function exportToCSV(slides: Slide[], responses: Response[], presentationTitle?:
 }
 
 export function SessionResults({ slides, responses, sessionCode, presentationTitle }: Props) {
-  // Filter out welcome slides for display
-  const questionSlides = slides.filter(s => s.type !== 'welcome')
+  // Filter out non-question slides (welcome and content don't have responses)
+  const questionSlides = slides.filter(s => s.type !== 'welcome' && s.type !== 'content')
   const [selectedSlideIndex, setSelectedSlideIndex] = useState(0)
   const selectedSlide = questionSlides[selectedSlideIndex]
   const slideResponses = responses.filter((r) => r.slide_id === selectedSlide?.id)

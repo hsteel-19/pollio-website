@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -240,6 +240,25 @@ export function AudienceView({ session, initialSlide }: Props) {
         </p>
         <p className="text-text-secondary">
           The presenter will start the questions shortly
+        </p>
+      </div>
+    )
+  }
+
+  // Content slide - no interaction, just show info
+  if (currentSlide.type === 'content') {
+    return (
+      <div className="text-center py-8">
+        <div className="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h1 className="text-xl font-semibold text-text-primary mb-2">
+          {currentSlide.title}
+        </h1>
+        <p className="text-text-secondary">
+          Look at the presentation screen
         </p>
       </div>
     )

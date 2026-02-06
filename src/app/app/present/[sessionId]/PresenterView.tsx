@@ -7,7 +7,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import Image from 'next/image'
 import { ResultsDisplay } from './ResultsDisplay'
 
-type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -306,6 +306,41 @@ export function PresenterView({ session, slides, initialResponses }: Props) {
                   <span className="text-lg font-medium">{participantCount} participant{participantCount !== 1 ? 's' : ''} joined</span>
                 </div>
               </div>
+            </div>
+          ) : activeSlide?.type === 'content' ? (
+            /* Content slides - no interaction, just display */
+            <div className="flex-1 flex flex-col items-center justify-center">
+              {activeSlide && (
+                <>
+                  <h1 className="text-5xl font-bold text-slate-800 text-center mb-6 max-w-4xl">
+                    {activeSlide.title}
+                  </h1>
+                  {activeSlide.description && (
+                    <p className="text-2xl text-slate-500 text-center mb-8 max-w-2xl">
+                      {activeSlide.description}
+                    </p>
+                  )}
+                  
+                  {/* Content body */}
+                  {(activeSlide.settings.body as string) && (
+                    <div className="text-xl text-slate-600 text-center max-w-3xl mb-8 whitespace-pre-wrap leading-relaxed">
+                      {activeSlide.settings.body as string}
+                    </div>
+                  )}
+
+                  {/* Content image */}
+                  {(activeSlide.settings.image_url as string) && (
+                    <div className="max-w-4xl w-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img 
+                        src={activeSlide.settings.image_url as string} 
+                        alt={activeSlide.title}
+                        className="w-full h-auto max-h-[50vh] object-contain rounded-2xl shadow-lg"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           ) : (
             /* Question slides */

@@ -9,7 +9,7 @@ import { AddSlideModal } from './AddSlideModal'
 import { UpgradeModal } from '@/components/UpgradeModal'
 import { FREE_TIER_LIMITS } from '@/lib/subscription'
 
-type SlideType = 'welcome' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
+type SlideType = 'welcome' | 'content' | 'multiple_choice' | 'scale' | 'word_cloud' | 'open_ended'
 
 interface Slide {
   id: string
@@ -48,6 +48,7 @@ interface Props {
 
 const slideTypeLabels: Record<SlideType, string> = {
   welcome: 'Welcome',
+  content: 'Content',
   multiple_choice: 'Multiple Choice',
   scale: 'Scale',
   word_cloud: 'Word Cloud',
@@ -58,6 +59,11 @@ const slideTypeIcons: Record<SlideType, React.ReactNode> = {
   welcome: (
     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+    </svg>
+  ),
+  content: (
+    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h10M4 14h16M4 18h10" />
     </svg>
   ),
   multiple_choice: (
@@ -186,6 +192,7 @@ export function PresentationEditor({
 
     const defaultSettings: Record<SlideType, Record<string, unknown>> = {
       welcome: {},
+      content: { body: '', image_url: '' },
       multiple_choice: { options: ['Option 1', 'Option 2'], allow_multiple: false },
       scale: { min: 1, max: 5, min_label: '', max_label: '' },
       word_cloud: { max_words: 3 },
