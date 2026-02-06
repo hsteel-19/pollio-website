@@ -18,8 +18,19 @@ interface Props {
   responses: Response[]
 }
 
-// Single consistent color for all results (primary teal)
-// Future: Add per-option colors and color themes
+// Color palette for multiple choice options (must match SlideEditor)
+const OPTION_COLORS = [
+  { name: 'Teal', bg: 'bg-teal-500', light: 'bg-teal-100', text: 'text-teal-600' },
+  { name: 'Blue', bg: 'bg-blue-500', light: 'bg-blue-100', text: 'text-blue-600' },
+  { name: 'Purple', bg: 'bg-purple-500', light: 'bg-purple-100', text: 'text-purple-600' },
+  { name: 'Pink', bg: 'bg-pink-500', light: 'bg-pink-100', text: 'text-pink-600' },
+  { name: 'Orange', bg: 'bg-orange-500', light: 'bg-orange-100', text: 'text-orange-600' },
+  { name: 'Green', bg: 'bg-green-500', light: 'bg-green-100', text: 'text-green-600' },
+  { name: 'Red', bg: 'bg-red-500', light: 'bg-red-100', text: 'text-red-600' },
+  { name: 'Yellow', bg: 'bg-yellow-500', light: 'bg-yellow-100', text: 'text-yellow-600' },
+]
+
+// Default color for other elements
 const CHART_COLOR = { bg: 'bg-primary', text: 'text-primary', light: 'bg-primary/10' }
 
 // Word cloud uses primary color
@@ -58,6 +69,7 @@ export function ResultsDisplay({ slide, responses }: Props) {
 
 function MultipleChoiceResults({ slide, responses }: { slide: Slide; responses: Response[] }) {
   const options = (slide.settings.options as string[]) || []
+  const optionColors = (slide.settings.option_colors as number[]) || options.map((_, i) => i % OPTION_COLORS.length)
 
   // Count votes for each option
   const voteCounts = options.map((_, index) => {
@@ -76,12 +88,14 @@ function MultipleChoiceResults({ slide, responses }: { slide: Slide; responses: 
         const count = voteCounts[index]
         const percentage = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0
         const width = (count / maxVotes) * 100
+        const colorIndex = optionColors[index] ?? (index % OPTION_COLORS.length)
+        const color = OPTION_COLORS[colorIndex]
 
         return (
           <div key={index} className="bg-white rounded-2xl p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
-                <span className={`w-8 h-8 ${CHART_COLOR.bg} rounded-lg flex items-center justify-center text-white font-bold text-sm`}>
+                <span className={`w-8 h-8 ${color.bg} rounded-lg flex items-center justify-center text-white font-bold text-sm`}>
                   {String.fromCharCode(65 + index)}
                 </span>
                 <span className="text-slate-700 font-medium text-lg">{option}</span>
@@ -90,9 +104,9 @@ function MultipleChoiceResults({ slide, responses }: { slide: Slide; responses: 
                 {count} <span className="text-slate-400">({percentage}%)</span>
               </span>
             </div>
-            <div className={`h-3 ${CHART_COLOR.light} rounded-full overflow-hidden`}>
+            <div className={`h-3 ${color.light} rounded-full overflow-hidden`}>
               <div
-                className={`h-full ${CHART_COLOR.bg} rounded-full transition-all duration-700 ease-out`}
+                className={`h-full ${color.bg} rounded-full transition-all duration-700 ease-out`}
                 style={{ width: `${width}%` }}
               />
             </div>

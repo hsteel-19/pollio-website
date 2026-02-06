@@ -290,6 +290,18 @@ export function AudienceView({ session, initialSlide }: Props) {
   )
 }
 
+// Color palette for multiple choice options (must match SlideEditor)
+const OPTION_COLORS = [
+  { name: 'Teal', bg: 'bg-teal-500', light: 'bg-teal-50', border: 'border-teal-500' },
+  { name: 'Blue', bg: 'bg-blue-500', light: 'bg-blue-50', border: 'border-blue-500' },
+  { name: 'Purple', bg: 'bg-purple-500', light: 'bg-purple-50', border: 'border-purple-500' },
+  { name: 'Pink', bg: 'bg-pink-500', light: 'bg-pink-50', border: 'border-pink-500' },
+  { name: 'Orange', bg: 'bg-orange-500', light: 'bg-orange-50', border: 'border-orange-500' },
+  { name: 'Green', bg: 'bg-green-500', light: 'bg-green-50', border: 'border-green-500' },
+  { name: 'Red', bg: 'bg-red-500', light: 'bg-red-50', border: 'border-red-500' },
+  { name: 'Yellow', bg: 'bg-yellow-500', light: 'bg-yellow-50', border: 'border-yellow-500' },
+]
+
 // Multiple Choice Input
 function MultipleChoiceInput({
   settings,
@@ -301,6 +313,7 @@ function MultipleChoiceInput({
   submitting: boolean
 }) {
   const options = (settings.options as string[]) || []
+  const optionColors = (settings.option_colors as number[]) || options.map((_, i) => i % OPTION_COLORS.length)
   const allowMultiple = (settings.allow_multiple as boolean) || false
   const [selected, setSelected] = useState<number[]>([])
 
@@ -318,34 +331,34 @@ function MultipleChoiceInput({
 
   return (
     <div className="space-y-3">
-      {options.map((option, index) => (
-        <button
-          key={index}
-          onClick={() => toggleOption(index)}
-          className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-            selected.includes(index)
-              ? 'border-primary bg-primary/10'
-              : 'border-text-secondary/20 hover:border-primary/50'
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                selected.includes(index)
-                  ? 'border-primary bg-primary'
-                  : 'border-text-secondary/30'
-              }`}
-            >
-              {selected.includes(index) && (
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
-              )}
+      {options.map((option, index) => {
+        const colorIndex = optionColors[index] ?? (index % OPTION_COLORS.length)
+        const color = OPTION_COLORS[colorIndex]
+        const isSelected = selected.includes(index)
+        
+        return (
+          <button
+            key={index}
+            onClick={() => toggleOption(index)}
+            className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+              isSelected
+                ? `${color.border} ${color.light}`
+                : 'border-text-secondary/20 hover:border-text-secondary/40'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-sm ${
+                  isSelected ? color.bg : 'bg-text-secondary/20'
+                }`}
+              >
+                {String.fromCharCode(65 + index)}
+              </div>
+              <span className="text-text-primary">{option}</span>
             </div>
-            <span className="text-text-primary">{option}</span>
-          </div>
-        </button>
-      ))}
+          </button>
+        )
+      })}
 
       <button
         onClick={() => onSubmit({ selected })}

@@ -272,6 +272,18 @@ export function SlideEditor({
   )
 }
 
+// Color palette for multiple choice options
+const OPTION_COLORS = [
+  { name: 'Teal', bg: 'bg-teal-500', light: 'bg-teal-100', hex: '#14B8A6' },
+  { name: 'Blue', bg: 'bg-blue-500', light: 'bg-blue-100', hex: '#3B82F6' },
+  { name: 'Purple', bg: 'bg-purple-500', light: 'bg-purple-100', hex: '#8B5CF6' },
+  { name: 'Pink', bg: 'bg-pink-500', light: 'bg-pink-100', hex: '#EC4899' },
+  { name: 'Orange', bg: 'bg-orange-500', light: 'bg-orange-100', hex: '#F97316' },
+  { name: 'Green', bg: 'bg-green-500', light: 'bg-green-100', hex: '#22C55E' },
+  { name: 'Red', bg: 'bg-red-500', light: 'bg-red-100', hex: '#EF4444' },
+  { name: 'Yellow', bg: 'bg-yellow-500', light: 'bg-yellow-100', hex: '#EAB308' },
+]
+
 // Multiple Choice Settings
 function MultipleChoiceSettings({
   settings,
@@ -281,8 +293,10 @@ function MultipleChoiceSettings({
   onUpdate: (settings: Record<string, unknown>) => void
 }) {
   const initialOptions = (settings.options as string[]) || ['Option 1', 'Option 2']
+  const optionColors = (settings.option_colors as number[]) || initialOptions.map((_, i) => i % OPTION_COLORS.length)
   const allowMultiple = (settings.allow_multiple as boolean) || false
   const [localOptions, setLocalOptions] = useState<string[]>(initialOptions)
+  const [showColorPicker, setShowColorPicker] = useState<number | null>(null)
 
   // Sync local options when settings change from outside (e.g., slide switch)
   useEffect(() => {
@@ -302,46 +316,86 @@ function MultipleChoiceSettings({
     }
   }
 
+  const updateOptionColor = (optionIndex: number, colorIndex: number) => {
+    const newColors = [...optionColors]
+    // Ensure array is long enough
+    while (newColors.length <= optionIndex) {
+      newColors.push(newColors.length % OPTION_COLORS.length)
+    }
+    newColors[optionIndex] = colorIndex
+    onUpdate({ ...settings, option_colors: newColors })
+    setShowColorPicker(null)
+  }
+
   const addOption = () => {
     const newOptions = [...localOptions, `Option ${localOptions.length + 1}`]
+    const newColors = [...optionColors, localOptions.length % OPTION_COLORS.length]
     setLocalOptions(newOptions)
-    onUpdate({ ...settings, options: newOptions })
+    onUpdate({ ...settings, options: newOptions, option_colors: newColors })
   }
 
   const removeOption = (index: number) => {
     if (localOptions.length <= 2) return
     const newOptions = localOptions.filter((_, i) => i !== index)
+    const newColors = optionColors.filter((_, i) => i !== index)
     setLocalOptions(newOptions)
-    onUpdate({ ...settings, options: newOptions })
+    onUpdate({ ...settings, options: newOptions, option_colors: newColors })
   }
 
   return (
     <div className="space-y-4">
-      {localOptions.map((option, index) => (
-        <div key={index} className="flex items-center gap-2">
-          <span className="w-6 h-6 bg-primary/10 text-primary text-sm font-medium rounded flex items-center justify-center">
-            {String.fromCharCode(65 + index)}
-          </span>
-          <input
-            type="text"
-            value={option}
-            onChange={(e) => updateLocalOption(index, e.target.value)}
-            onBlur={() => saveOption(index)}
-            className="flex-1 px-3 py-2 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
-            placeholder={`Option ${index + 1}`}
-          />
-          {localOptions.length > 2 && (
-            <button
-              onClick={() => removeOption(index)}
-              className="p-2 text-text-secondary hover:text-error"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          )}
-        </div>
-      ))}
+      {localOptions.map((option, index) => {
+        const colorIndex = optionColors[index] ?? (index % OPTION_COLORS.length)
+        const color = OPTION_COLORS[colorIndex]
+        
+        return (
+          <div key={index} className="flex items-center gap-2">
+            {/* Color picker button */}
+            <div className="relative">
+              <button
+                onClick={() => setShowColorPicker(showColorPicker === index ? null : index)}
+                className={`w-8 h-8 ${color.bg} rounded-lg flex items-center justify-center text-white font-bold text-sm hover:opacity-90 transition-opacity`}
+                title="Change color"
+              >
+                {String.fromCharCode(65 + index)}
+              </button>
+              
+              {/* Color picker dropdown */}
+              {showColorPicker === index && (
+                <div className="absolute top-10 left-0 z-10 bg-white rounded-lg shadow-lg border border-text-secondary/10 p-2 grid grid-cols-4 gap-1">
+                  {OPTION_COLORS.map((c, colorIdx) => (
+                    <button
+                      key={colorIdx}
+                      onClick={() => updateOptionColor(index, colorIdx)}
+                      className={`w-8 h-8 ${c.bg} rounded-md hover:scale-110 transition-transform ${colorIdx === colorIndex ? 'ring-2 ring-offset-2 ring-text-primary' : ''}`}
+                      title={c.name}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <input
+              type="text"
+              value={option}
+              onChange={(e) => updateLocalOption(index, e.target.value)}
+              onBlur={() => saveOption(index)}
+              className="flex-1 px-3 py-2 border border-text-secondary/20 rounded-lg focus:border-primary focus:outline-none"
+              placeholder={`Option ${index + 1}`}
+            />
+            {localOptions.length > 2 && (
+              <button
+                onClick={() => removeOption(index)}
+                className="p-2 text-text-secondary hover:text-error"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        )
+      })}
 
       <button
         onClick={addOption}
