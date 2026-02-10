@@ -44,7 +44,7 @@ create index presentations_user_id_idx on public.presentations(user_id);
 -- ============================================
 -- SLIDES (questions within presentations)
 -- ============================================
-create type slide_type as enum ('welcome', 'multiple_choice', 'scale', 'word_cloud', 'open_ended');
+create type slide_type as enum ('welcome', 'content', 'multiple_choice', 'scale', 'word_cloud', 'open_ended');
 
 create table public.slides (
   id uuid default gen_random_uuid() primary key,

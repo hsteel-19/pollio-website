@@ -446,16 +446,23 @@ function MultipleChoiceSettings({
               
               {/* Color picker dropdown */}
               {showColorPicker === index && (
-                <div className="absolute top-10 left-0 z-10 bg-white rounded-lg shadow-lg border border-text-secondary/10 p-2 grid grid-cols-4 gap-1">
-                  {OPTION_COLORS.map((c, colorIdx) => (
-                    <button
-                      key={colorIdx}
-                      onClick={() => updateOptionColor(index, colorIdx)}
-                      className={`w-8 h-8 ${c.bg} rounded-md hover:scale-110 transition-transform ${colorIdx === colorIndex ? 'ring-2 ring-offset-2 ring-text-primary' : ''}`}
-                      title={c.name}
-                    />
-                  ))}
-                </div>
+                <>
+                  {/* Backdrop to close picker */}
+                  <div className="fixed inset-0 z-10" onClick={() => setShowColorPicker(null)} />
+                  <div className="absolute top-10 left-0 z-20 bg-white rounded-xl shadow-xl border border-text-secondary/10 p-3 w-[200px]">
+                    <p className="text-xs font-medium text-text-secondary mb-2">Pick a color</p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {OPTION_COLORS.map((c, colorIdx) => (
+                        <button
+                          key={colorIdx}
+                          onClick={() => updateOptionColor(index, colorIdx)}
+                          className={`w-10 h-10 ${c.bg} rounded-lg hover:scale-110 transition-transform ${colorIdx === colorIndex ? 'ring-2 ring-offset-2 ring-text-primary' : ''}`}
+                          title={c.name}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
             
