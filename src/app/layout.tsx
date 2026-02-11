@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n";
 
@@ -60,6 +61,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17947502780"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17947502780');
+          `}
+        </Script>
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <LanguageProvider>
           {children}
