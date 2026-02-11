@@ -61,7 +61,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <head>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-17947502780"
           strategy="afterInteractive"
@@ -74,8 +74,6 @@ export default function RootLayout({
             gtag('config', 'AW-17947502780');
           `}
         </Script>
-      </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
         <LanguageProvider>
           {children}
         </LanguageProvider>
