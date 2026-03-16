@@ -22,6 +22,9 @@ export function Header() {
           <a href="#pricing" className="text-text-secondary hover:text-text-primary transition-colors">
             {t.header.pricing}
           </a>
+          <a href="/blog" className="text-text-secondary hover:text-text-primary transition-colors">
+            Blogg
+          </a>
           <a href="/login" className="text-text-secondary hover:text-text-primary transition-colors">
             {t.header.login}
           </a>
@@ -72,11 +75,11 @@ export function Header() {
               {t.header.pricing}
             </a>
             <a
-              href="/blogg"
+              href="/blog"
               onClick={() => setIsMenuOpen(false)}
               className="text-lg font-medium text-text-primary hover:text-primary transition-colors py-2"
             >
-              {t.header.blog}
+              Blogg
             </a>
             <a
               href="/login"
